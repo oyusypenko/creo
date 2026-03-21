@@ -1,10 +1,17 @@
-# Creo
+<p align="center">
+  <img src="screenshots/cover-image.svg" alt="Creo — Design & Development Toolkit" width="100%" />
+</p>
 
-AI-powered design, UX, content, DevOps, and testing toolkit for [Claude Code](https://claude.com/claude-code).
+<p align="center">
+  AI-powered design, UX, content, DevOps, and testing toolkit for <a href="https://claude.com/claude-code">Claude Code</a>.
+  <br />
+  12 specialized skills, 12 parallel subagents, and 3 optional extensions.
+</p>
 
-12 specialized skills, 12 parallel subagents, and 3 optional extensions -- covering the full product development lifecycle.
-
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="MIT License" /></a>
+  <a href="https://github.com/oyusypenko/creo"><img src="https://img.shields.io/badge/Claude_Code-Skill-6366f1" alt="Claude Code Skill" /></a>
+</p>
 
 ---
 
