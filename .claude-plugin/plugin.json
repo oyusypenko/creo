@@ -1,0 +1,38 @@
+{
+  "name": "creo",
+  "version": "1.0.0",
+  "description": "AI-powered design, UX, content, DevOps, and testing toolkit for Claude Code. Design reviews (WCAG, Nielsen's heuristics), UX flow analysis, marketing content generation (JTBD), SEO auditing, CI/CD pipelines, test orchestration, and marketing site creation.",
+  "author": "oyusypenko",
+  "license": "MIT",
+  "homepage": "https://github.com/oyusypenko/creo",
+  "entry_point": "creo/SKILL.md",
+  "skills": [
+    "creo/SKILL.md",
+    "skills/creo-design-review/SKILL.md",
+    "skills/creo-design-implement/SKILL.md",
+    "skills/creo-ux-internal/SKILL.md",
+    "skills/creo-ux-competitor/SKILL.md",
+    "skills/creo-content/SKILL.md",
+    "skills/creo-image-prompt/SKILL.md",
+    "skills/creo-seo/SKILL.md",
+    "skills/creo-devops/SKILL.md",
+    "skills/creo-pipeline/SKILL.md",
+    "skills/creo-test/SKILL.md",
+    "skills/creo-marketing-site/SKILL.md",
+    "skills/creo-ai-generation/SKILL.md"
+  ],
+  "agents": [
+    "agents/creo-design-review.md",
+    "agents/creo-design-implement.md",
+    "agents/creo-ux-internal.md",
+    "agents/creo-ux-competitor.md",
+    "agents/creo-content.md",
+    "agents/creo-seo.md",
+    "agents/creo-unit-test.md",
+    "agents/creo-e2e-test.md",
+    "agents/creo-github-cli.md",
+    "agents/creo-cloudflare-cli.md",
+    "agents/creo-railway-cli.md",
+    "agents/creo-stripe-cli.md"
+  ]
+}

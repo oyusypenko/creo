@@ -1,0 +1,15 @@
+{
+    "source_language": "en",
+    "target_languages": ["ua", "pl"],
+    "lm_studio_url": "http://localhost:1234",
+    "model": "local-model",
+    "max_string_length": 800,
+    "request_delay": 1.0,
+    "max_retries": 3,
+    "retry_delay": 2.0,
+    "temperature": 0.2,
+    "max_tokens": 1000,
+    "input_dir": "input",
+    "output_dir": "output",
+    "logs_dir": "logs"
+}

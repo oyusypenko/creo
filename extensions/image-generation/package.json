@@ -1,0 +1,40 @@
+{
+  "name": "creo-image-generation",
+  "version": "1.0.0",
+  "description": "Creo image generation extension with DALL-E 3 and ComfyUI support",
+  "main": "index.js",
+  "bin": {
+    "creo-image-gen": "./index.js"
+  },
+  "scripts": {
+    "generate": "node index.js generate",
+    "generate-estimate": "node index.js generate --estimate",
+    "seo-only": "node index.js generate --seo-only",
+    "optimize-only": "node index.js generate --optimize-only",
+    "comfyui:all": "node comfyui/generate-batch.js",
+    "comfyui:landing": "node comfyui/generate-batch.js landing",
+    "comfyui:features": "node comfyui/generate-batch.js features",
+    "comfyui:usecases": "node comfyui/generate-batch.js useCases",
+    "comfyui:sources": "node comfyui/generate-batch.js sources"
+  },
+  "dependencies": {
+    "axios": "^1.12.1",
+    "canvas": "^3.2.0",
+    "dotenv": "^17.2.2",
+    "glob": "^11.0.3",
+    "openai": "^4.87.3",
+    "sharp": "^0.34.3",
+    "ws": "^8.18.0"
+  },
+  "keywords": [
+    "creo",
+    "image-generation",
+    "ai",
+    "openai",
+    "dall-e",
+    "comfyui",
+    "automation"
+  ],
+  "author": "",
+  "license": "MIT"
+}

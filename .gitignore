@@ -1,0 +1,45 @@
+# Generated output
+output/
+.planning/
+*.tmp
+*.bak
+*.swp
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.sublime-*
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.mypy_cache/
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environments
+venv/
+.venv/
+env/
+.env
+
+# Node
+node_modules/
+
+# Logs
+*.log
+
+# Archives
+*.zip
+*.tar.gz
+
+# Generated reports
+.claude/
