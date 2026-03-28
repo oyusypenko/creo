@@ -11,9 +11,21 @@
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="MIT License" /></a>
   <a href="https://github.com/oyusypenko/creo"><img src="https://img.shields.io/badge/Claude_Code-Skill-6366f1" alt="Claude Code Skill" /></a>
+  <a href="https://github.com/oyusypenko/creo/stargazers"><img src="https://img.shields.io/github/stars/oyusypenko/creo?style=social" alt="GitHub Stars" /></a>
+  <a href="https://github.com/oyusypenko/creo/releases"><img src="https://img.shields.io/github/v/release/oyusypenko/creo" alt="Latest Release" /></a>
 </p>
 
 ---
+
+## Why Creo?
+
+**Without Creo:** You manually check responsive layouts, accessibility, SEO tags, write marketing copy, configure CI/CD, and set up tests -- each requiring different tools and expertise.
+
+**With Creo:** One toolkit handles all of it. Run `/creo design-review` and get a full responsive + WCAG + heuristic audit. Run `/creo seo` for a complete SEO analysis. Run `/creo marketing-site full` to orchestrate an entire marketing site build with content, SEO, design review, localization, and QA -- all in parallel.
+
+- Zero dependencies -- pure markdown, one-liner install
+- 12 skills run as parallel subagents for speed
+- Works with Claude Code, compatible with Codex, Cursor, and Gemini CLI
 
 ## Features
 
@@ -51,6 +63,8 @@ cd creo
 ./install.sh
 ```
 
+<!-- TODO: Add terminal demo GIF here once recorded with asciinema/vhs -->
+
 ### Usage
 
 ```
@@ -61,6 +75,14 @@ claude                                          # Start Claude Code
 /creo test unit                                 # Run unit tests
 /creo marketing-site full                       # Build full marketing site
 ```
+
+## Compatibility
+
+Creo skills use the standard SKILL.md format, making them compatible with:
+- **Claude Code** (primary, fully tested)
+- **Codex CLI** (OpenAI)
+- **Cursor** (via agent skills)
+- **Gemini CLI** (Google)
 
 ## Commands
 
@@ -78,6 +100,18 @@ claude                                          # Start Claude Code
 | `/creo test <command>` | Test orchestration (unit + E2E) |
 | `/creo marketing-site <command>` | Full marketing site creation (7-stage) |
 | `/creo ai-generation <command>` | AI generation pipeline expertise |
+
+## Standalone Skills
+
+Need just one skill? Each is available as a standalone install:
+
+| Skill | Install | Repository |
+|-------|---------|------------|
+| **SEO Audit** | `curl -fsSL https://raw.githubusercontent.com/creo-kit/claude-seo-audit/main/install.sh \| bash` | [creo-kit/claude-seo-audit](https://github.com/creo-kit/claude-seo-audit) |
+| **Design Review** | `curl -fsSL https://raw.githubusercontent.com/creo-kit/claude-design-review/main/install.sh \| bash` | [creo-kit/claude-design-review](https://github.com/creo-kit/claude-design-review) |
+| **Marketing Content** | `curl -fsSL https://raw.githubusercontent.com/creo-kit/claude-marketing-content/main/install.sh \| bash` | [creo-kit/claude-marketing-content](https://github.com/creo-kit/claude-marketing-content) |
+
+> Install the full Creo toolkit to get all 12 skills, or pick individual ones above.
 
 ## Optional Extensions
 
