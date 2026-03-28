@@ -103,15 +103,24 @@ Creo skills use the standard SKILL.md format, making them compatible with:
 
 ## Standalone Skills
 
-Need just one skill? Each is available as a standalone install:
+Need just one skill? Each is available as a standalone install under [creo-kit](https://github.com/creo-kit):
 
-| Skill | Install | Repository |
-|-------|---------|------------|
-| **SEO Audit** | `curl -fsSL https://raw.githubusercontent.com/creo-kit/claude-seo-audit/main/install.sh \| bash` | [creo-kit/claude-seo-audit](https://github.com/creo-kit/claude-seo-audit) |
-| **Design Review** | `curl -fsSL https://raw.githubusercontent.com/creo-kit/claude-design-review/main/install.sh \| bash` | [creo-kit/claude-design-review](https://github.com/creo-kit/claude-design-review) |
-| **Marketing Content** | `curl -fsSL https://raw.githubusercontent.com/creo-kit/claude-marketing-content/main/install.sh \| bash` | [creo-kit/claude-marketing-content](https://github.com/creo-kit/claude-marketing-content) |
+| Skill | Repository | Install |
+|-------|------------|---------|
+| **SEO Audit** | [claude-seo-audit](https://github.com/creo-kit/claude-seo-audit) | `curl -fsSL https://raw.githubusercontent.com/creo-kit/claude-seo-audit/main/install.sh \| bash` |
+| **Design Review** | [claude-design-review](https://github.com/creo-kit/claude-design-review) | `curl -fsSL https://raw.githubusercontent.com/creo-kit/claude-design-review/main/install.sh \| bash` |
+| **Design Implement** | [claude-design-implement](https://github.com/creo-kit/claude-design-implement) | `curl -fsSL https://raw.githubusercontent.com/creo-kit/claude-design-implement/main/install.sh \| bash` |
+| **UX Audit** | [claude-ux-audit](https://github.com/creo-kit/claude-ux-audit) | `curl -fsSL https://raw.githubusercontent.com/creo-kit/claude-ux-audit/main/install.sh \| bash` |
+| **Competitor Analysis** | [claude-competitor-analysis](https://github.com/creo-kit/claude-competitor-analysis) | `curl -fsSL https://raw.githubusercontent.com/creo-kit/claude-competitor-analysis/main/install.sh \| bash` |
+| **Marketing Content** | [claude-marketing-content](https://github.com/creo-kit/claude-marketing-content) | `curl -fsSL https://raw.githubusercontent.com/creo-kit/claude-marketing-content/main/install.sh \| bash` |
+| **Image Prompt** | [claude-image-prompt](https://github.com/creo-kit/claude-image-prompt) | `curl -fsSL https://raw.githubusercontent.com/creo-kit/claude-image-prompt/main/install.sh \| bash` |
+| **DevOps Toolkit** | [claude-devops-toolkit](https://github.com/creo-kit/claude-devops-toolkit) | `curl -fsSL https://raw.githubusercontent.com/creo-kit/claude-devops-toolkit/main/install.sh \| bash` |
+| **CI/CD Pipeline** | [claude-ci-pipeline](https://github.com/creo-kit/claude-ci-pipeline) | `curl -fsSL https://raw.githubusercontent.com/creo-kit/claude-ci-pipeline/main/install.sh \| bash` |
+| **Test Orchestrator** | [claude-test-orchestrator](https://github.com/creo-kit/claude-test-orchestrator) | `curl -fsSL https://raw.githubusercontent.com/creo-kit/claude-test-orchestrator/main/install.sh \| bash` |
+| **Marketing Site** | [claude-marketing-site](https://github.com/creo-kit/claude-marketing-site) | `curl -fsSL https://raw.githubusercontent.com/creo-kit/claude-marketing-site/main/install.sh \| bash` |
+| **AI Generation** | [claude-ai-generation](https://github.com/creo-kit/claude-ai-generation) | `curl -fsSL https://raw.githubusercontent.com/creo-kit/claude-ai-generation/main/install.sh \| bash` |
 
-> Install the full Creo toolkit to get all 12 skills, or pick individual ones above.
+> Install the full Creo toolkit to get all 12 skills at once, or pick individual ones above.
 
 ## Optional Extensions
 
