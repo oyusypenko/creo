@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f0f1a;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#1a1a2e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#16213e;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="12" />
+    </filter>
+    <filter id="orb">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="40" />
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="400" height="400" rx="40" fill="url(#bg)" />
+
+  <!-- Ambient glow -->
+  <circle cx="120" cy="120" r="100" fill="#6366f1" opacity="0.08" filter="url(#orb)" />
+  <circle cx="300" cy="300" r="120" fill="#8b5cf6" opacity="0.06" filter="url(#orb)" />
+
+  <!-- Grid (subtle) -->
+  <g opacity="0.05" stroke="#a78bfa" stroke-width="0.5">
+    <line x1="0" y1="100" x2="400" y2="100" />
+    <line x1="0" y1="200" x2="400" y2="200" />
+    <line x1="0" y1="300" x2="400" y2="300" />
+    <line x1="100" y1="0" x2="100" y2="400" />
+    <line x1="200" y1="0" x2="200" y2="400" />
+    <line x1="300" y1="0" x2="300" y2="400" />
+  </g>
+
+  <!-- Decorative nodes -->
+  <g opacity="0.15" stroke="url(#accent)" stroke-width="1" fill="none">
+    <circle cx="80" cy="80" r="2.5" fill="#6366f1" opacity="0.6" />
+    <circle cx="140" cy="60" r="2" fill="#8b5cf6" opacity="0.5" />
+    <circle cx="60" cy="140" r="2" fill="#a78bfa" opacity="0.5" />
+    <line x1="80" y1="80" x2="140" y2="60" />
+    <line x1="80" y1="80" x2="60" y2="140" />
+
+    <circle cx="320" cy="320" r="2.5" fill="#6366f1" opacity="0.6" />
+    <circle cx="340" cy="260" r="2" fill="#8b5cf6" opacity="0.5" />
+    <circle cx="280" cy="340" r="2" fill="#a78bfa" opacity="0.5" />
+    <line x1="320" y1="320" x2="340" y2="260" />
+    <line x1="320" y1="320" x2="280" y2="340" />
+  </g>
+
+  <!-- "C" letter glow -->
+  <text x="200" y="235" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="180" font-weight="800" fill="#6366f1" opacity="0.25" filter="url(#glow)">C</text>
+
+  <!-- "C" letter -->
+  <text x="200" y="235" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="180" font-weight="800" fill="#ffffff">C</text>
+
+  <!-- Accent line -->
+  <rect x="140" y="260" width="120" height="3" rx="1.5" fill="url(#accent)" opacity="0.8" />
+
+  <!-- Subtitle -->
+  <text x="200" y="300" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="24" fill="#a5b4fc" letter-spacing="6" font-weight="500">CREO</text>
+
+  <!-- Bottom text -->
+  <text x="200" y="340" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="11" fill="#64748b" letter-spacing="2">TOOLKIT</text>
+
+  <!-- Border glow -->
+  <rect x="0" y="0" width="400" height="2" rx="1" fill="url(#accent)" opacity="0.5" />
+  <rect x="0" y="398" width="400" height="2" rx="1" fill="url(#accent)" opacity="0.3" />
+</svg>
