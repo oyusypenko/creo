@@ -54,8 +54,21 @@ main() {
         cp -r "${TEMP_DIR}/creo/docs/"* "${SKILL_DIR}/docs/"
     fi
 
+    # Copy update scripts alongside the skill so users can run them without re-cloning
+    for s in update.sh update-check.sh; do
+        if [ -f "${TEMP_DIR}/creo/${s}" ]; then
+            cp "${TEMP_DIR}/creo/${s}" "${SKILL_DIR}/${s}"
+            chmod +x "${SKILL_DIR}/${s}"
+        fi
+    done
+
+    # Stamp installed commit SHA + timestamp (used by update-check)
+    INSTALLED_SHA=$(cd "${TEMP_DIR}/creo" && git rev-parse HEAD 2>/dev/null || echo "unknown")
+    echo "${INSTALLED_SHA}" > "${SKILL_DIR}/.version"
+    date -u +"%Y-%m-%dT%H:%M:%SZ" > "${SKILL_DIR}/.installed-at"
+
     echo ""
-    echo "✓ Creo installed successfully!"
+    echo "✓ Creo installed successfully! (${INSTALLED_SHA:0:7})"
     echo ""
     echo "Usage:"
     echo "  1. Start Claude Code:  claude"

@@ -76,6 +76,68 @@ claude                                          # Start Claude Code
 /creo marketing-site full                       # Build full marketing site
 ```
 
+## Updating
+
+Creo stamps the installed commit SHA to `~/.claude/skills/creo/.version` and ships both an updater and a non-blocking update check.
+
+### Update to latest
+
+**Unix/macOS:**
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/oyusypenko/creo/main/update.sh | bash
+# or, if already installed:
+~/.claude/skills/creo/update.sh
+```
+
+**Windows:**
+
+```powershell
+irm https://raw.githubusercontent.com/oyusypenko/creo/main/update.ps1 | iex
+```
+
+The updater runs `uninstall.sh` first so removed files are actually cleaned up, then reinstalls from `main`.
+
+### Auto-notify on Claude Code startup
+
+Add a `SessionStart` hook in `.claude/settings.json` (project or user level) to check for updates when Claude Code starts. Silent on success, prints a one-line warning when an update is available. Never blocks or fails the session.
+
+```json
+{
+  "hooks": {
+    "SessionStart": [{
+      "hooks": [{
+        "type": "command",
+        "command": "bash ~/.claude/skills/creo/update-check.sh"
+      }]
+    }]
+  }
+}
+```
+
+Windows:
+
+```json
+{
+  "hooks": {
+    "SessionStart": [{
+      "hooks": [{
+        "type": "command",
+        "command": "powershell -ExecutionPolicy Bypass -File %USERPROFILE%/.claude/skills/creo/update-check.ps1"
+      }]
+    }]
+  }
+}
+```
+
+The check fetches the latest commit on `main` from the GitHub API (3s timeout, falls back to `git ls-remote`) and compares against the installed `.version`. Offline and rate-limited cases exit silently.
+
+**Environment overrides** (rarely needed):
+
+- `CREO_REPO` — repo slug (default: `oyusypenko/creo`)
+- `CREO_SKILL_DIR` — install location (default: `~/.claude/skills/creo`)
+- `CREO_TIMEOUT` — curl timeout in seconds (default: `3`)
+
 ## Project Extensions
 
 Teach any Creo skill about your project's domain, conventions, and file paths without modifying Creo itself. Extensions live inside your project repo at `.claude/skills/creo-{skill}/creo-{skill}-{project_id}.md` and are loaded automatically at the start of every skill run.

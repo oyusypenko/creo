@@ -65,6 +65,17 @@ try {
         New-Item -ItemType Directory -Force -Path $SkillDocs | Out-Null
         Copy-Item -Recurse -Force "$DocsPath\*" $SkillDocs
     }
+
+    # Copy update scripts
+    foreach ($script in @('update.sh', 'update.ps1', 'update-check.sh', 'update-check.ps1')) {
+        $src = Join-Path $TempDir $script
+        if (Test-Path $src) { Copy-Item -Force $src (Join-Path $SkillDir $script) }
+    }
+
+    # Stamp installed version
+    $InstalledSha = (git -C $TempDir rev-parse HEAD).Trim()
+    Set-Content -Path (Join-Path $SkillDir '.version') -Value $InstalledSha -NoNewline
+    Set-Content -Path (Join-Path $SkillDir '.installed-at') -Value ([DateTime]::UtcNow.ToString('yyyy-MM-ddTHH:mm:ssZ')) -NoNewline
 } catch {
     Write-Host ""
     Write-Host "✗ Installation failed: $($_.Exception.Message)" -ForegroundColor Red
@@ -76,7 +87,8 @@ try {
 }
 
 Write-Host ""
-Write-Host "✓ Creo installed successfully!" -ForegroundColor Green
+$shortSha = if ($InstalledSha) { $InstalledSha.Substring(0, 7) } else { "unknown" }
+Write-Host "✓ Creo installed successfully! ($shortSha)" -ForegroundColor Green
 Write-Host ""
 Write-Host "Usage:" -ForegroundColor Cyan
 Write-Host "  1. Start Claude Code:  claude"
