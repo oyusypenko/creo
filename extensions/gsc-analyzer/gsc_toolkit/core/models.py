@@ -39,6 +39,7 @@ class SEOAuditResult:
     coverage_issues: Dict = field(default_factory=dict)
     core_web_vitals: List[Dict] = field(default_factory=list)
     links_analysis: Dict = field(default_factory=dict)
+    indexing_buckets: Dict[str, List[str]] = field(default_factory=dict)
 
     # Issues found
     issues_found: List[Dict] = field(default_factory=list)
@@ -66,6 +67,7 @@ class SEOAuditResult:
             'coverage_issues': self.coverage_issues,
             'core_web_vitals': self.core_web_vitals,
             'links_analysis': self.links_analysis,
+            'indexing_buckets': self.indexing_buckets,
             'issues_found': self.issues_found,
             'manual_actions': [
                 {

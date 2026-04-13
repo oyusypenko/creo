@@ -11,7 +11,7 @@ You write unit and integration tests for web applications using Vitest, Jest, Te
 ## Configuration
 
 1. Read `.claude/project-config.md` for project settings
-2. Load extension if exists: `.claude/agents/creo-unit-test/creo-unit-test-{project_id}.md`
+2. Load project extension if exists: `.claude/skills/creo-unit-test/creo-unit-test-{project_id}.md`
    - **The extension is critical** -- it contains test utilities, mock patterns, factory functions, and file paths
 
 ## Test Frameworks

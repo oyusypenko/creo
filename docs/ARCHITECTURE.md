@@ -70,4 +70,37 @@ Extensions install to `~/.claude/skills/creo-{extension}/` and `~/.claude/agents
 
 ## Project Configuration
 
-Skills check `.claude/project-config.md` at runtime for project-specific customization (colors, URLs, tech stack, locales, competitors). This replaces the old project-specific extension pattern from design-ux-toolkit.
+Skills check `.claude/project-config.md` at runtime for baseline project settings (colors, URLs, tech stack, locales, competitors). The `project_id` field is used to resolve per-skill extension files.
+
+## Project Extensions
+
+Per-skill extension files let you teach any Creo skill about your project's domain, conventions, and file paths without modifying Creo itself.
+
+**Location:** `.claude/skills/creo-{skill}/creo-{skill}-{project_id}.md` (inside the project repo, not the Creo install).
+
+**Loading:** Every skill and subagent reads `.claude/project-config.md`, resolves `{project_id}`, then loads the matching extension file if it exists. The extension is consulted before any work begins.
+
+**Covered skills and subagents:**
+
+| Skill/Agent | Extension path |
+|-------------|----------------|
+| creo-design-review | `.claude/skills/creo-design-review/creo-design-review-{project_id}.md` |
+| creo-design-implement | `.claude/skills/creo-design-implement/creo-design-implement-{project_id}.md` |
+| creo-ux-internal | `.claude/skills/creo-ux-internal/creo-ux-internal-{project_id}.md` |
+| creo-ux-competitor | `.claude/skills/creo-ux-competitor/creo-ux-competitor-{project_id}.md` |
+| creo-content | `.claude/skills/creo-content/creo-content-{project_id}.md` |
+| creo-image-prompt | `.claude/skills/creo-image-prompt/creo-image-prompt-{project_id}.md` |
+| creo-seo | `.claude/skills/creo-seo/creo-seo-{project_id}.md` |
+| creo-devops | `.claude/skills/creo-devops/creo-devops-{project_id}.md` |
+| creo-pipeline | `.claude/skills/creo-pipeline/creo-pipeline-{project_id}.md` |
+| creo-test | `.claude/skills/creo-test/creo-test-{project_id}.md` |
+| creo-marketing-site | `.claude/skills/creo-marketing-site/creo-marketing-site-{project_id}.md` |
+| creo-ai-generation | `.claude/skills/creo-ai-generation/creo-ai-generation-{project_id}.md` |
+| creo-unit-test | `.claude/skills/creo-unit-test/creo-unit-test-{project_id}.md` |
+| creo-e2e-test | `.claude/skills/creo-e2e-test/creo-e2e-test-{project_id}.md` |
+| creo-github-cli | `.claude/skills/creo-github-cli/creo-github-cli-{project_id}.md` |
+| creo-cloudflare-cli | `.claude/skills/creo-cloudflare-cli/creo-cloudflare-cli-{project_id}.md` |
+| creo-railway-cli | `.claude/skills/creo-railway-cli/creo-railway-cli-{project_id}.md` |
+| creo-stripe-cli | `.claude/skills/creo-stripe-cli/creo-stripe-cli-{project_id}.md` |
+
+**Design rationale:** Keeps upstream Creo skills generic and reusable across any codebase, while project-specific knowledge lives in the project repo, is version-controlled with the code it describes, and survives Creo updates.

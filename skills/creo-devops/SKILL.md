@@ -31,6 +31,13 @@ DevOps expert specializing in CI/CD pipeline management, infrastructure coordina
 
 ## Core Instructions
 
+### Configuration
+
+1. Check for project-specific config at `.claude/project-config.md`
+2. Read `project_id`, hosting providers, deployment targets
+3. Load project extension if it exists at `.claude/skills/creo-devops/creo-devops-{project_id}.md`. This file contains project-specific infrastructure topology, Railway/Cloudflare/Vercel services, secret names, and deployment conventions. `{project_id}` comes from `project-config.md`. Always load it before doing work.
+4. If no config exists, use defaults or ask user
+
 ### Subagents
 
 This skill absorbs routing from the DevOps orchestrator. Specialized subagents exist for deep expertise:

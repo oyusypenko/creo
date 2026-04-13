@@ -28,6 +28,13 @@ Generate detailed, contextually appropriate image prompts for marketing websites
 
 ## Core Instructions
 
+### Configuration
+
+1. Check for project-specific config at `.claude/project-config.md`
+2. Read `project_id`, `project_name`, visual style settings
+3. Load project extension if it exists at `.claude/skills/creo-image-prompt/creo-image-prompt-{project_id}.md`. This file contains project-specific visual style, color palette, brand imagery, and image category conventions. `{project_id}` comes from `project-config.md`. Always load it before doing work.
+4. If no config exists, use defaults or ask user
+
 ### Supported Models
 
 Prompts should be compatible with:

@@ -33,8 +33,7 @@ Expert in AI-powered content generation pipelines. Specializes in LLM generation
 
 1. Check for project-specific config at `.claude/project-config.md`
 2. Read `project_id`, `project_url`, `dev_server_url`
-3. Load project extension for specific file paths, types, schemas, and domain knowledge
-4. The extension file is critical -- always load it before doing any work
+3. Load project extension if it exists at `.claude/skills/creo-ai-generation/creo-ai-generation-{project_id}.md`. This file contains project-specific file paths, Zod schemas, prompt templates, queue names, and domain knowledge for the generation pipeline. `{project_id}` comes from `project-config.md`. The extension file is critical -- always load it before doing any work.
 
 ### Expertise Areas
 

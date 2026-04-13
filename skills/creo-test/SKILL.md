@@ -36,6 +36,13 @@ Master coordinator for all testing workflows. Understands the project test archi
 
 ## Core Instructions
 
+### Configuration
+
+1. Check for project-specific config at `.claude/project-config.md`
+2. Read `project_id`, `test_frameworks`, `dev_server_url`, coverage targets
+3. Load project extension if it exists at `.claude/skills/creo-test/creo-test-{project_id}.md`. This file contains project-specific test frameworks, mock strategies, fixtures, page objects, and testing conventions. `{project_id}` comes from `project-config.md`. Always load it before doing work.
+4. If no config exists, use defaults or ask user
+
 ### Routing Rules
 
 Route to **creo-unit-test** when:

@@ -76,6 +76,49 @@ claude                                          # Start Claude Code
 /creo marketing-site full                       # Build full marketing site
 ```
 
+## Project Extensions
+
+Teach any Creo skill about your project's domain, conventions, and file paths without modifying Creo itself. Extensions live inside your project repo at `.claude/skills/creo-{skill}/creo-{skill}-{project_id}.md` and are loaded automatically at the start of every skill run.
+
+**How it works:**
+
+1. Set `project_id: "my-project"` in `.claude/project-config.md`
+2. Create `.claude/skills/creo-{skill}/creo-{skill}-{project_id}.md` for any skill you want to customize
+3. Creo skills auto-load the matching extension before doing work
+
+**Example layout in your project:**
+
+```
+.claude/
+├── project-config.md                                     # project_id, URLs, locales, etc.
+└── skills/
+    ├── creo-design-review/
+    │   └── creo-design-review-my-project.md              # Design tokens, component rules
+    ├── creo-pipeline/
+    │   └── creo-pipeline-my-project.md                   # CI/CD ports, services, deploy targets
+    ├── creo-seo/
+    │   └── creo-seo-my-project.md                        # Keyword strategy, sitemap paths
+    ├── creo-ai-generation/
+    │   └── creo-ai-generation-my-project.md              # Zod schemas, prompts, queue names
+    └── creo-unit-test/
+        └── creo-unit-test-my-project.md                  # Test utilities, factories, mocks
+```
+
+**What extensions can contain:**
+
+- Domain terminology and glossary (entity names, business concepts)
+- File path conventions specific to your monorepo
+- Tech stack specifics (Zod schemas, database tables, queue names)
+- Design tokens and component standards
+- CI/CD infrastructure (services, ports, secrets, deploy targets)
+- Test utilities, factories, mock patterns, page objects
+- Brand voice, tone, target audience, JTBD framing
+- Competitor lists and positioning notes
+
+**Why it matters:**
+
+Upstream Creo skills stay generic and reusable across any codebase. Your project-specific knowledge lives in your repo, survives Creo updates, and stays version-controlled alongside the code it describes. The same pattern works for all 12 skills plus DevOps subagents (GitHub/Cloudflare/Railway/Stripe CLI).
+
 ## Compatibility
 
 Creo skills use the standard SKILL.md format, making them compatible with:

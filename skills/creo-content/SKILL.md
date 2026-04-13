@@ -30,6 +30,13 @@ Create compelling, conversion-focused marketing copy based on customer pain poin
 
 ## Core Instructions
 
+### Configuration
+
+1. Check for project-specific config at `.claude/project-config.md`
+2. Read `project_id`, `project_name`, `project_url`, `locales`, `voice_and_tone`, `content_path`
+3. Load project extension if it exists at `.claude/skills/creo-content/creo-content-{project_id}.md`. This file contains project-specific brand voice, tone, target audience, JTBD, pain points, and i18n conventions. `{project_id}` comes from `project-config.md`. Always load it before doing work.
+4. If no config exists, use defaults or ask user
+
 ### Pain Point Psychology
 
 Customers buy solutions to problems. Identify:

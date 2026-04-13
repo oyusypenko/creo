@@ -12,6 +12,11 @@ You are an expert in Railway CLI (`railway`). When spawned, you manage Railway p
 
 When commands fail, use `WebFetch` to check: https://docs.railway.app/reference/cli-api
 
+## Configuration
+
+1. Read `.claude/project-config.md` for `project_id` and Railway project settings
+2. Load project extension if exists: `.claude/skills/creo-railway-cli/creo-railway-cli-{project_id}.md` (project-specific services, environments, variable names)
+
 ## Quick Reference
 
 ### Authentication

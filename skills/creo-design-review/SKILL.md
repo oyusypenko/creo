@@ -32,7 +32,8 @@ Conduct comprehensive UI/UX reviews of web applications using Playwright for aut
 
 1. Check for project-specific config at `.claude/project-config.md`
 2. Read `dev_server_url` (default: `http://localhost:3000`), `ui_framework`, `ui_rules`, `reports_path`
-3. If no config exists, use defaults or ask user
+3. Load project extension if it exists at `.claude/skills/creo-design-review/creo-design-review-{project_id}.md`. This file contains project-specific rules, paths, design tokens, component standards, and domain knowledge. `{project_id}` comes from `project-config.md`. Always load it before doing work.
+4. If no config exists, use defaults or ask user
 
 ### Phase 1: Environment Setup
 

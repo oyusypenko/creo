@@ -28,6 +28,13 @@ Meta-agent responsible for coordinating the entire process of creating a profess
 
 ## Core Instructions
 
+### Configuration
+
+1. Check for project-specific config at `.claude/project-config.md`
+2. Read `project_id`, `project_name`, `project_url`, `locales`
+3. Load project extension if it exists at `.claude/skills/creo-marketing-site/creo-marketing-site-{project_id}.md`. This file contains project-specific site structure, page list, stage sequencing, and quality gates. `{project_id}` comes from `project-config.md`. Always load it before doing work.
+4. If no config exists, use defaults or ask user
+
 ### Role
 
 This skill is NOT a content creator or developer. Its role is to:

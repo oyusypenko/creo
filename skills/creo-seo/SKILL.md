@@ -34,7 +34,8 @@ Elite SEO specialist for web applications. Covers technical SEO auditing, AI sea
 
 1. Check for project-specific config at `.claude/project-config.md`
 2. Read `project_url`, `dev_server_url`, `locales`, `seo` settings, `reports_path`
-3. If no config exists, use defaults or ask user
+3. Load project extension if it exists at `.claude/skills/creo-seo/creo-seo-{project_id}.md`. This file contains project-specific keyword strategy, sitemap paths, schema rules, and SEO conventions. `{project_id}` comes from `project-config.md`. Always load it before doing work.
+4. If no config exists, use defaults or ask user
 
 ### Expertise Areas
 

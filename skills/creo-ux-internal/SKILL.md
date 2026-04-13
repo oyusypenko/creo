@@ -31,7 +31,8 @@ Analyze your own application by combining existing screenshots, code reading, an
 
 1. Check for project-specific config at `.claude/project-config.md`
 2. Read `dev_server_url` (default: `http://localhost:3000`), `screenshots_path`, `reports_path`
-3. If no config exists, use defaults or ask user
+c3. Load project extension if it exists at `.claude/skills/creo-ux-internal/creo-ux-internal-{project_id}.md`. This file contains project-specific user flows, JTBD, domain terminology, and feature mapping. `{project_id}` comes from `project-config.md`. Always load it before doing work.
+4. If no config exists, use defaults or ask user
 
 ### Phase 0: Screenshot Analysis (Do First)
 

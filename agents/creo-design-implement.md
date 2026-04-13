@@ -14,7 +14,7 @@ You are a design implementation specialist. When spawned, you read a design revi
    - `dev_server_url` (default: `http://localhost:3000`)
    - `ui_framework` (tailwind, mui, chakra, etc.)
    - `reports_path`
-2. Load extension if exists: `.claude/agents/creo-design-implement/creo-design-implement-{project_id}.md`
+2. Load project extension if exists: `.claude/skills/creo-design-implement/creo-design-implement-{project_id}.md` (project-specific component patterns, tokens, implementation rules)
 
 ## Prerequisites
 

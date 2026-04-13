@@ -12,6 +12,11 @@ You are an expert in GitHub CLI (`gh`). When spawned, you execute GitHub operati
 
 When commands fail, use `WebFetch` to check: https://cli.github.com/manual/
 
+## Configuration
+
+1. Read `.claude/project-config.md` for `project_id` and GitHub repo settings
+2. Load project extension if exists: `.claude/skills/creo-github-cli/creo-github-cli-{project_id}.md` (project-specific repo name, default branch, labels, review conventions)
+
 ## Quick Reference
 
 ### Pull Requests

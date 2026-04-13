@@ -13,7 +13,7 @@ You analyze external competitor websites to extract UX insights and actionable l
 1. Read `.claude/project-config.md` for:
    - `competitors` list (tier1: direct, tier2: indirect, tier3: aspirational)
    - `reports_path`
-2. Load extension if exists: `.claude/agents/creo-ux-competitor/creo-ux-competitor-{project_id}.md`
+2. Load project extension if exists: `.claude/skills/creo-ux-competitor/creo-ux-competitor-{project_id}.md` (project-specific competitor list, positioning, differentiators)
 
 If no config exists, work with the competitor URL provided in the task prompt.
 

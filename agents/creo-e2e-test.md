@@ -11,7 +11,7 @@ You write end-to-end tests with Playwright, covering full user flows, authentica
 ## Configuration
 
 1. Read `.claude/project-config.md` for project settings
-2. Load extension if exists: `.claude/agents/creo-e2e-test/creo-e2e-test-{project_id}.md`
+2. Load project extension if exists: `.claude/skills/creo-e2e-test/creo-e2e-test-{project_id}.md`
    - **The extension is critical** -- it contains auth setup, base URLs, test credentials, and page paths
 
 ## Core Principles

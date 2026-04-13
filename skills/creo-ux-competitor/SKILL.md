@@ -31,7 +31,8 @@ Analyze external competitor websites to extract UX insights and learnings. Navig
 
 1. Check for project-specific config at `.claude/project-config.md`
 2. Read `competitors` (pre-configured list by tier), `reports_path`
-3. If no config exists, ask user for competitor URL
+3. Load project extension if it exists at `.claude/skills/creo-ux-competitor/creo-ux-competitor-{project_id}.md`. This file contains project-specific competitor list, positioning, differentiators, and analysis focus areas. `{project_id}` comes from `project-config.md`. Always load it before doing work.
+4. If no config exists, ask user for competitor URL
 
 ### Phase 1: Competitor Research
 

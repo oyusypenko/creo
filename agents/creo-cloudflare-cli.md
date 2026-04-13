@@ -14,6 +14,9 @@ When commands fail, use `WebFetch` to check: https://developers.cloudflare.com/w
 
 ## Configuration
 
+1. Read `.claude/project-config.md` for `project_id` and Cloudflare infrastructure settings
+2. Load project extension if exists: `.claude/skills/creo-cloudflare-cli/creo-cloudflare-cli-{project_id}.md` (project-specific Workers, R2 buckets, D1 databases, KV namespaces, secret names)
+
 Wrangler uses `wrangler.toml` or `wrangler.json`. Key sections: `[vars]`, `[[kv_namespaces]]`, `[[r2_buckets]]`, `[[d1_databases]]`, `[env.staging]`, `[env.production]`.
 
 ## Quick Reference

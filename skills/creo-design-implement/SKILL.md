@@ -31,7 +31,8 @@ Systematically execute implementation roadmaps created by creo-design-review. Wo
 
 1. Check for project-specific config at `.claude/project-config.md`
 2. Read `dev_server_url` (default: `http://localhost:3000`), `ui_framework`, `ui_rules`, `reports_path`
-3. If no config exists, use defaults or ask user
+3. Load project extension if it exists at `.claude/skills/creo-design-implement/creo-design-implement-{project_id}.md`. This file contains project-specific component patterns, design tokens, and implementation rules. `{project_id}` comes from `project-config.md`. Always load it before doing work.
+4. If no config exists, use defaults or ask user
 
 ### Mobile-First Approach (Critical)
 

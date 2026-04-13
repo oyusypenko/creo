@@ -14,6 +14,7 @@ from ..core.utils import (
     print_warning,
     print_info,
 )
+from ..analyzers.coverage import CoverageAnalyzer
 from ..gsc_client import GSCAnalyzer
 
 
@@ -22,6 +23,14 @@ class SEOAuditor:
 
     def __init__(self, analyzer: GSCAnalyzer):
         self.analyzer = analyzer
+
+    # coverageState fragments that indicate the page is effectively missing/broken.
+    NOT_FOUND_STATES = ("not found", "404")
+    SOFT_404_STATES = ("soft 404",)
+    SERVER_ERROR_STATES = ("server error", "5xx")
+    BLOCKED_STATES = ("blocked by robots", "401", "403", "unauthorized", "forbidden")
+    NOINDEX_STATES = ("noindex",)
+    REDIRECT_STATES = ("page with redirect", "redirect error")
 
     def run_audit(self, days: int = DEFAULT_DAYS, key_urls: List[str] = None) -> SEOAuditResult:
         """
@@ -92,13 +101,27 @@ class SEOAuditor:
         print_success(f"Links data: {links_total} records")
 
         # 1.5 URL Inspection
+        # Combine pages receiving impressions with URLs from sitemap so we can
+        # surface 404/Not Found pages that Search Analytics alone won't reveal.
         print(f"\n{Colors.CYAN}[5/7] Inspecting key URLs...{Colors.ENDC}")
+        urls_to_inspect: List[str] = []
+
         if key_urls:
-            urls_to_inspect = key_urls[:20]
-        elif not pages_df.empty:
-            urls_to_inspect = pages_df.head(10)['page'].tolist()
+            urls_to_inspect = list(key_urls[:30])
         else:
-            urls_to_inspect = []
+            if not pages_df.empty:
+                urls_to_inspect = pages_df.head(15)['page'].tolist()
+
+            sitemap_urls = self._collect_sitemap_urls(audit.sitemaps, limit=25)
+            if sitemap_urls:
+                existing = set(urls_to_inspect)
+                for url in sitemap_urls:
+                    if url not in existing:
+                        urls_to_inspect.append(url)
+                        existing.add(url)
+
+        # Cap overall inspection to respect API quota (2000/day, ~600/min).
+        urls_to_inspect = urls_to_inspect[:40]
 
         if urls_to_inspect:
             for url in urls_to_inspect:
@@ -131,6 +154,49 @@ class SEOAuditor:
         other_exports = self.analyzer.find_gsc_exports(pattern="")
         print_success(f"Found: {len(other_exports)} export folders")
 
+    def _collect_sitemap_urls(self, sitemaps: List[Dict], limit: int = 25) -> List[str]:
+        """Fetch a sample of URLs from the submitted sitemaps for inspection."""
+        urls: List[str] = []
+        seen = set()
+
+        for sm in sitemaps or []:
+            path = sm.get('path')
+            if not path:
+                continue
+            try:
+                sitemap_urls = self.analyzer.indexing.get_urls_from_sitemap(path)
+            except Exception:
+                sitemap_urls = []
+
+            for url in sitemap_urls:
+                if url in seen:
+                    continue
+                seen.add(url)
+                urls.append(url)
+                if len(urls) >= limit:
+                    return urls
+
+        return urls
+
+    def _classify_coverage_state(self, coverage_state: str) -> str:
+        """Return a bucket name for an inspection coverageState."""
+        if not coverage_state:
+            return 'unknown'
+        state = coverage_state.lower()
+        if any(frag in state for frag in self.NOT_FOUND_STATES):
+            return 'not_found'
+        if any(frag in state for frag in self.SOFT_404_STATES):
+            return 'soft_404'
+        if any(frag in state for frag in self.SERVER_ERROR_STATES):
+            return 'server_error'
+        if any(frag in state for frag in self.BLOCKED_STATES):
+            return 'blocked'
+        if any(frag in state for frag in self.NOINDEX_STATES):
+            return 'noindex'
+        if any(frag in state for frag in self.REDIRECT_STATES):
+            return 'redirect'
+        return 'other'
+
     def _identify_issues(self, audit: SEOAuditResult):
         """Phase 2: Identify issues and create manual actions."""
         print_header("🔎 PHASE 2: ISSUE IDENTIFICATION")
@@ -138,35 +204,179 @@ class SEOAuditor:
         issues = []
         manual_actions = []
 
-        # 2.1 Indexing Issues
+        # 2.1 Indexing Issues — bucketed by coverageState so 404s, soft 404s,
+        # server errors, and blocked URLs each get their own remediation track.
         not_indexed = []
+        buckets: Dict[str, List[str]] = {
+            'not_found': [],
+            'soft_404': [],
+            'server_error': [],
+            'blocked': [],
+            'noindex': [],
+            'redirect': [],
+            'other': [],
+        }
+
         for insp in audit.inspection_results:
             result = insp.get('result', {})
             index_status = result.get('indexStatusResult', {})
             verdict = index_status.get('verdict', '')
+            coverage_state = index_status.get('coverageState', '')
+
             if verdict != 'PASS':
                 not_indexed.append(insp['url'])
+                bucket = self._classify_coverage_state(coverage_state)
+                if bucket in buckets:
+                    buckets[bucket].append(insp['url'])
+                else:
+                    buckets['other'].append(insp['url'])
+
+                severity = 'critical' if bucket in ('not_found', 'soft_404', 'server_error') else 'high'
                 issues.append({
                     'type': 'indexing',
-                    'severity': 'high',
+                    'severity': severity,
                     'url': insp['url'],
-                    'issue': f"Not indexed: {index_status.get('coverageState', 'Unknown')}"
+                    'coverage_state': coverage_state or 'Unknown',
+                    'bucket': bucket,
+                    'issue': f"Not indexed: {coverage_state or 'Unknown'}",
                 })
 
-        if not_indexed:
-            print_warning(f"Found {len(not_indexed)} pages not indexed")
+        # Merge in URLs from the GSC Coverage CSV exports (Pages → "Why pages
+        # aren't indexed"). The CoverageAnalyzer already buckets them by the
+        # GSC-reported issue type (Not found (404), Soft 404, Server error…)
+        # so we don't need a second guess here.
+        coverage_categorized = audit.coverage_issues.get('categorized', {}) or {}
+        coverage_bucket_map = {
+            'not_found_404': 'not_found',
+            'soft_404': 'soft_404',
+            'server_error': 'server_error',
+            'blocked_robots': 'blocked',
+            'blocked_unauthorized': 'blocked',
+            'noindex': 'noindex',
+            'redirect_error': 'redirect',
+            'page_with_redirect': 'redirect',
+            'crawled_not_indexed': 'other',
+            'discovered_not_indexed': 'other',
+            'duplicate_no_canonical': 'other',
+            'duplicate_google_canonical': 'other',
+        }
+        for coverage_key, bucket_key in coverage_bucket_map.items():
+            extras = coverage_categorized.get(coverage_key) or []
+            if not extras:
+                continue
+            existing = set(buckets[bucket_key])
+            for url in extras:
+                if url in existing:
+                    continue
+                existing.add(url)
+                buckets[bucket_key].append(url)
+                if url not in not_indexed:
+                    not_indexed.append(url)
+                severity = 'critical' if bucket_key in ('not_found', 'soft_404', 'server_error') else 'high'
+                issues.append({
+                    'type': 'indexing',
+                    'severity': severity,
+                    'url': url,
+                    'coverage_state': CoverageAnalyzer.CATEGORY_LABELS.get(coverage_key, coverage_key),
+                    'bucket': bucket_key,
+                    'source': 'gsc_coverage_export',
+                    'issue': f"Not indexed: {CoverageAnalyzer.CATEGORY_LABELS.get(coverage_key, coverage_key)}",
+                })
+
+        audit.indexing_buckets = {k: list(v) for k, v in buckets.items()}
+
+        not_found_urls = buckets['not_found']
+        if not_found_urls:
+            print_warning(f"Found {len(not_found_urls)} pages returning Not found (404)")
+            manual_actions.append(ManualAction(
+                priority=Priority.CRITICAL,
+                category="Indexing",
+                title=f"{len(not_found_urls)} pages reported as Not found (404)",
+                description=(
+                    "URL Inspection returned coverageState 'Not found (404)' for these pages. "
+                    "They are in sitemaps, internal links, or have historical impressions but "
+                    "now respond with HTTP 404."
+                ),
+                steps=[
+                    "Confirm the HTTP status: curl -I <url> (expect 404)",
+                    "If the page should exist: restore the route or fix the broken link/redirect",
+                    "If the page is intentionally removed: remove it from sitemap.xml and add a 301 to the closest live page",
+                    "Run: python -m gsc_toolkit inspect <url> to verify after fix",
+                    "Review GSC → Pages → 'Not found (404)' for the full list",
+                ],
+                affected_urls=not_found_urls[:20],
+                gsc_link="https://search.google.com/search-console/index",
+            ))
+
+        soft_404_urls = buckets['soft_404']
+        if soft_404_urls:
+            print_warning(f"Found {len(soft_404_urls)} pages classified as Soft 404")
             manual_actions.append(ManualAction(
                 priority=Priority.HIGH,
                 category="Indexing",
-                title=f"{len(not_indexed)} pages not indexed",
-                description="These pages are not in Google's index",
+                title=f"{len(soft_404_urls)} soft 404 pages",
+                description=(
+                    "Google treats these pages as missing even though they return HTTP 200. "
+                    "Usually caused by empty content, 'no results' pages, or thin templates."
+                ),
                 steps=[
-                    "Go to GSC → URL Inspection",
-                    "Enter each URL and click 'Request Indexing'",
+                    "Return proper HTTP 404/410 for genuinely missing content",
+                    "Add real, unique content to pages that should exist",
+                    "Avoid rendering 'not found' copy on a 200 response",
+                ],
+                affected_urls=soft_404_urls[:20],
+                gsc_link="https://search.google.com/search-console/index",
+            ))
+
+        server_error_urls = buckets['server_error']
+        if server_error_urls:
+            print_warning(f"Found {len(server_error_urls)} pages returning server errors (5xx)")
+            manual_actions.append(ManualAction(
+                priority=Priority.CRITICAL,
+                category="Indexing",
+                title=f"{len(server_error_urls)} pages with server errors",
+                description="URL Inspection reported a 5xx response. Googlebot cannot index these URLs.",
+                steps=[
+                    "Check application and origin logs for the listed URLs",
+                    "Verify the route renders in production (not just locally)",
+                    "Once fixed, request re-indexing: python -m gsc_toolkit index-request <url>",
+                ],
+                affected_urls=server_error_urls[:20],
+            ))
+
+        blocked_urls = buckets['blocked']
+        if blocked_urls:
+            print_warning(f"Found {len(blocked_urls)} pages blocked to Googlebot")
+            manual_actions.append(ManualAction(
+                priority=Priority.HIGH,
+                category="Indexing",
+                title=f"{len(blocked_urls)} pages blocked (robots.txt / 401 / 403)",
+                description="Googlebot is blocked from fetching these URLs.",
+                steps=[
+                    "Review robots.txt for overly broad Disallow rules",
+                    "Check auth/middleware that may reject the Googlebot user-agent",
+                    "Use: python -m gsc_toolkit robots <base_url> to validate",
+                ],
+                affected_urls=blocked_urls[:20],
+            ))
+
+        other_not_indexed = (
+            buckets['noindex'] + buckets['redirect'] + buckets['other']
+        )
+        if other_not_indexed:
+            print_warning(f"Found {len(other_not_indexed)} other pages not indexed")
+            manual_actions.append(ManualAction(
+                priority=Priority.HIGH,
+                category="Indexing",
+                title=f"{len(other_not_indexed)} pages not indexed (other reasons)",
+                description="These pages are not in Google's index for reasons other than 404/5xx/blocked.",
+                steps=[
+                    "Review each URL's coverageState in the audit JSON",
+                    "Go to GSC → URL Inspection and click 'Request Indexing' if the page should be live",
                     "Or use: python -m gsc_toolkit index-request <url>",
                 ],
-                affected_urls=not_indexed[:20],
-                gsc_link="https://search.google.com/search-console/index"
+                affected_urls=other_not_indexed[:20],
+                gsc_link="https://search.google.com/search-console/index",
             ))
 
         # 2.2 Coverage/Redirect Issues
@@ -280,9 +490,15 @@ class SEOAuditor:
         audit.manual_actions = manual_actions
         audit.total_issues = len(issues)
 
-        # Calculate SEO score
+        # Calculate SEO score — weight 404s and server errors heavier than
+        # generic "not indexed" because they indicate broken pages, not just
+        # discovery delays.
         score = 100
-        score -= len(not_indexed) * 5
+        score -= len(not_found_urls) * 8
+        score -= len(soft_404_urls) * 6
+        score -= len(server_error_urls) * 8
+        score -= len(blocked_urls) * 4
+        score -= len(other_not_indexed) * 3
         score -= len(www_redirects) * 0.5
         score -= len(trailing_slash) * 0.5
         score -= len(poor_cwv) * 10

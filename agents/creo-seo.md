@@ -16,7 +16,7 @@ You are a technical SEO specialist for Next.js applications. When spawned, you p
    - `locales` (supported languages)
    - `seo` settings (site name, OG images, schema)
    - `reports_path`
-2. Load extension if exists: `.claude/agents/creo-seo/creo-seo-{project_id}.md`
+2. Load project extension if exists: `.claude/skills/creo-seo/creo-seo-{project_id}.md` (project-specific keyword strategy, sitemap paths, schema rules)
 
 ## Audit Phases
 

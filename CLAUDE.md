@@ -85,3 +85,4 @@ creo/
 3. **Parallel Execution**: Orchestrator skills spawn subagents simultaneously
 4. **Extension System**: Tools (image-gen, i18n, GSC) are optional extensions with own lifecycle
 5. **Project Configuration**: Skills check `.claude/project-config.md` at runtime for customization
+6. **Project Extensions**: Each skill auto-loads `.claude/skills/creo-{skill}/creo-{skill}-{project_id}.md` if it exists, letting projects inject domain knowledge without modifying Creo

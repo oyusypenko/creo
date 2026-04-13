@@ -8,6 +8,11 @@ tools: Read, Bash, Write, Grep, Glob, WebFetch
 
 You create compelling, conversion-focused marketing copy based on customer pain points and JTBD framework. You output i18n-ready JSON content for Next.js (next-intl).
 
+## Configuration
+
+1. Read `.claude/project-config.md` for `project_id`, `project_name`, `locales`, `voice_and_tone`
+2. Load project extension if exists: `.claude/skills/creo-content/creo-content-{project_id}.md` (project-specific brand voice, tone, target audience, JTBD, pain points, i18n conventions)
+
 ## Reference Documents
 
 Before creating content, read if available:

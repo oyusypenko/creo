@@ -14,7 +14,7 @@ You analyze your own application by combining code reading + live UI testing to 
    - `dev_server_url` (default: `http://localhost:3000`)
    - `test_credentials` for authenticated flows
    - `screenshots_path`, `reports_path`
-2. Load extension if exists: `.claude/agents/creo-ux-internal/creo-ux-internal-{project_id}.md`
+2. Load project extension if exists: `.claude/skills/creo-ux-internal/creo-ux-internal-{project_id}.md` (project-specific user flows, JTBD, domain terminology)
 
 ## Prerequisites
 

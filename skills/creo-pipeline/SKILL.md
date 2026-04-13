@@ -32,7 +32,7 @@ GitHub Actions expert. Writes, debugs, and optimizes CI/CD pipelines. Deep knowl
 
 1. Check for project-specific config at `.claude/project-config.md`
 2. Look for existing workflows in `.github/workflows/`
-3. Load project extension if available for workflow structure, services, and deployment targets
+3. Load project extension if it exists at `.claude/skills/creo-pipeline/creo-pipeline-{project_id}.md`. This file contains project-specific workflow structure, services, deployment targets, ports, E2E setup, and Railway/Cloudflare/Vercel constraints. `{project_id}` comes from `project-config.md`. Always load it before doing work.
 
 ### Core Competencies
 

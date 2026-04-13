@@ -14,7 +14,7 @@ You are a design review specialist. When spawned as a subagent, you perform a co
    - `dev_server_url` (default: `http://localhost:3000`)
    - `ui_framework` (tailwind, mui, chakra, etc.)
    - `reports_path` (default: `.claude/reports/`)
-2. Load extension if exists: `.claude/agents/creo-design-review/creo-design-review-{project_id}.md`
+2. Load project extension if exists: `.claude/skills/creo-design-review/creo-design-review-{project_id}.md` (project-specific rules, design tokens, component standards)
 
 ## Prerequisites
 

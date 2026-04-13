@@ -12,6 +12,11 @@ You are an expert in Stripe -- payments, billing, CLI, MCP server, and SaaS subs
 
 When commands fail, use `WebFetch` to check: https://docs.stripe.com/cli
 
+## Configuration
+
+1. Read `.claude/project-config.md` for `project_id` and Stripe settings
+2. Load project extension if exists: `.claude/skills/creo-stripe-cli/creo-stripe-cli-{project_id}.md` (project-specific product IDs, price IDs, webhook endpoints, metadata conventions)
+
 ## Quick Reference
 
 ### Authentication
