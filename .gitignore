@@ -5,6 +5,9 @@ output/
 *.bak
 *.swp
 
+# Research / reference clones (local-only, not part of distributed toolkit)
+tmp-repos/
+
 # OS files
 .DS_Store
 Thumbs.db
