@@ -71,10 +71,22 @@ cd creo
 claude                                          # Start Claude Code
 /creo design-review http://localhost:3000       # Review a page
 /creo content landing                           # Generate landing page copy
-/creo seo audit https://example.com             # SEO audit
+/creo seo init                                  # (SEO: run this FIRST on any Next.js project)
+/creo seo audit https://example.com             # SEO audit (run after init)
 /creo test unit                                 # Run unit tests
 /creo marketing-site full                       # Build full marketing site
 ```
+
+### SEO: required first-run sequence
+
+The `creo-seo` agent is Next.js-opinionated and works best when it has a cached project profile. Run these two commands in order on any new project:
+
+1. **`/creo seo init`** — scans the codebase once and writes `.claude/skills/creo-seo/creo-seo-{project_id}.md` with the page inventory, detected stack (App Router vs Pages, i18n locales, SEO libraries), existing schema types, business-type hypothesis, and detected gaps. All subsequent SEO commands load this profile for context, skipping redundant scans.
+2. **`/creo seo audit <url>`** — runs the full 7-phase audit end-to-end (technical SEO, content quality with AI-pattern detection, build validation, live Core Web Vitals, AI search / citability / llms.txt / 14-crawler access, schema deprecation sweep, composite scoring) and writes a markdown + JSON report to `.claude/reports/seo/`.
+
+Re-run `/creo seo init --refresh` when you change router type, upgrade Next.js major version, add/remove locales, or modify `next.config.*` or `package.json` significantly.
+
+For content-only deep dives (E-E-A-T, humanity score, citability rewrites, internal-linking audit), use `/creo seo-content audit <url>`.
 
 ## Updating
 

@@ -31,7 +31,9 @@ Creo is a comprehensive design, UX, content, DevOps, and testing toolkit for web
 | `/creo ux-competitor <url>` | Analyze competitor websites |
 | `/creo content <page-type>` | Generate marketing copy (JTBD, pain points) |
 | `/creo image-prompt <context>` | Generate image prompts for DALL-E/Midjourney/SDXL |
-| `/creo seo <url>` | SEO audit and optimization |
+| `/creo seo <url>` | Next.js SEO + GEO audit (7-phase, technical + schema + GEO) |
+| `/creo seo init` | Scan codebase and cache project profile for faster audits |
+| `/creo seo-content <url>` | Deep content audit (E-E-A-T, AI-pattern detection, citability) |
 | `/creo devops <command>` | Infrastructure management (GitHub/Cloudflare/Railway/Stripe) |
 | `/creo pipeline <command>` | CI/CD pipeline specialist (GitHub Actions) |
 | `/creo test <command>` | Test orchestration (unit + E2E) |
@@ -150,7 +152,8 @@ Each subagent is a focused agent definition for parallel delegation.
 | 4 | creo-ux-competitor | `creo/agents/ux-competitor.md` | Competitor UX analysis |
 | 5 | creo-content-strategist | `creo/agents/content-strategist.md` | Marketing copy generation |
 | 6 | creo-image-prompt | `creo/agents/image-prompt.md` | Image prompt generation |
-| 7 | creo-seo | `creo/agents/seo.md` | SEO audit and optimization |
+| 7 | creo-seo | `agents/creo-seo.md` | Next.js SEO + GEO audit (7-phase) |
+| 7b | creo-seo-content | `agents/creo-seo-content.md` | Deep content-quality audit (delegate or standalone) |
 | 8 | creo-github-cli | `creo/agents/github-cli.md` | GitHub API operations |
 | 9 | creo-cloudflare-cli | `creo/agents/cloudflare-cli.md` | Cloudflare management |
 | 10 | creo-railway-cli | `creo/agents/railway-cli.md` | Railway deployment |
