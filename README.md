@@ -5,7 +5,7 @@
 <p align="center">
   AI-powered design, UX, content, DevOps, and testing toolkit for <a href="https://claude.com/claude-code">Claude Code</a>.
   <br />
-  12 specialized skills, 12 parallel subagents, and 3 optional extensions.
+  13 specialized skills, 13 parallel subagents, and 3 optional extensions.
 </p>
 
 <p align="center">
@@ -24,7 +24,7 @@
 **With Creo:** One toolkit handles all of it. Run `/creo design-review` and get a full responsive + WCAG + heuristic audit. Run `/creo seo` for a complete SEO analysis. Run `/creo marketing-site full` to orchestrate an entire marketing site build with content, SEO, design review, localization, and QA -- all in parallel.
 
 - Zero dependencies -- pure markdown, one-liner install
-- 12 skills run as parallel subagents for speed
+- 13 skills run as parallel subagents for speed
 - Works with Claude Code, compatible with Codex, Cursor, and Gemini CLI
 
 ## Features
@@ -225,7 +225,7 @@ Teach any Creo skill about your project's domain, conventions, and file paths wi
 
 **Why it matters:**
 
-Upstream Creo skills stay generic and reusable across any codebase. Your project-specific knowledge lives in your repo, survives Creo updates, and stays version-controlled alongside the code it describes. The same pattern works for all 12 skills plus DevOps subagents (GitHub/Cloudflare/Railway/Stripe CLI).
+Upstream Creo skills stay generic and reusable across any codebase. Your project-specific knowledge lives in your repo, survives Creo updates, and stays version-controlled alongside the code it describes. The same pattern works for all 13 skills plus DevOps subagents (GitHub/Cloudflare/Railway/Stripe CLI).
 
 ## Compatibility
 
@@ -271,7 +271,7 @@ Need just one skill? Each is available as a standalone install under [creo-kit](
 | **Marketing Site** | [claude-marketing-site](https://github.com/creo-kit/claude-marketing-site) | `curl -fsSL https://raw.githubusercontent.com/creo-kit/claude-marketing-site/main/install.sh \| bash` |
 | **AI Generation** | [claude-ai-generation](https://github.com/creo-kit/claude-ai-generation) | `curl -fsSL https://raw.githubusercontent.com/creo-kit/claude-ai-generation/main/install.sh \| bash` |
 
-> Install the full Creo toolkit to get all 12 skills at once, or pick individual ones above.
+> Install the full Creo toolkit to get all 13 skills at once, or pick individual ones above.
 
 ## Optional Extensions
 
@@ -303,8 +303,8 @@ Extension commands become available after install:
 creo/
 ├── creo/SKILL.md                  # Main orchestrator (entry point)
 ├── creo/references/               # 12 on-demand knowledge files
-├── skills/                        # 12 sub-skills
-├── agents/                        # 12 parallel subagents
+├── skills/                        # 13 sub-skills
+├── agents/                        # 13 parallel subagents
 ├── extensions/                    # 3 optional extensions
 │   ├── image-generation/          # Node.js (DALL-E 3, ComfyUI)
 │   ├── i18n-translator/           # Python (LM Studio)

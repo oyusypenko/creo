@@ -10,7 +10,7 @@
       "name": "creo",
       "displayName": "Creo",
       "source": "./",
-      "description": "12 sub-skills and 13 parallel subagents covering design review (WCAG, Nielsen's heuristics), UX analysis, marketing content (JTBD), SEO + GEO auditing, DevOps, CI/CD pipelines, test orchestration, and marketing site creation.",
+      "description": "13 sub-skills and 13 parallel subagents covering design review (WCAG, Nielsen's heuristics), UX analysis, marketing content (JTBD), SEO + GEO auditing, DevOps, CI/CD pipelines, test orchestration, and marketing site creation.",
       "author": {
         "name": "oyusypenko",
         "url": "https://github.com/oyusypenko"

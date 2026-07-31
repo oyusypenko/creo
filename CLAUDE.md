@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Creo is a Claude Code skill providing 12 sub-skills, 12 parallel subagents, and 3 optional
+Creo is a Claude Code skill providing 13 sub-skills, 13 parallel subagents, and 3 optional
 extensions covering design review, UX analysis, marketing content, SEO, DevOps, CI/CD,
 testing, and marketing site orchestration.
 
@@ -15,7 +15,7 @@ creo/
   creo/                                # Main orchestrator skill
     SKILL.md                           # Entry point, routing table, core rules
     references/                        # On-demand knowledge files (12 files)
-  skills/                              # 12 specialized sub-skills
+  skills/                              # 13 specialized sub-skills
     creo-design-review/SKILL.md        # UI/UX review (responsive, WCAG, heuristics)
     creo-design-implement/SKILL.md     # Execute design fixes from reports
     creo-ux-internal/SKILL.md          # Analyze own app UX flows
@@ -28,7 +28,7 @@ creo/
     creo-test/SKILL.md                 # Test orchestration (unit + E2E)
     creo-marketing-site/SKILL.md       # Marketing site creation (7-stage)
     creo-ai-generation/SKILL.md        # AI generation pipelines
-  agents/                              # 12 parallel subagents
+  agents/                              # 13 parallel subagents
     creo-design-review.md
     creo-design-implement.md
     creo-ux-internal.md
