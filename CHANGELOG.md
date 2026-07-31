@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+- Plugin marketplace file (`.claude-plugin/marketplace.json`) so the repository is installable via `/plugin marketplace add oyusypenko/creo` in Claude Code and `codex plugin marketplace add oyusypenko/creo` in Codex
+- Marketplace and Codex install instructions in README and INSTALLATION docs
+
+### Fixed
+- `plugin.json` now matches the Claude Code plugin manifest schema (`author` as object, directory-based `skills` paths, removed unrecognized `entry_point` field); passes `claude plugin validate --strict`
+
 ## [1.0.0] - 2026-03-21
 
 ### Added

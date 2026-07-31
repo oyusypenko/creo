@@ -43,19 +43,53 @@
 
 ## Quick Start
 
-### Install (Unix/macOS)
+### Install as a Claude Code plugin (recommended)
+
+Inside Claude Code:
+
+```
+/plugin marketplace add oyusypenko/creo
+/plugin install creo@creo
+```
+
+Or from the terminal:
+
+```bash
+claude plugin marketplace add oyusypenko/creo
+claude plugin install creo@creo
+```
+
+All skills and subagents install together and stay updatable via `/plugin marketplace update creo`.
+
+### Install in Codex (OpenAI)
+
+Codex supports the same Agent Skills format. Either install the skills directly:
+
+```bash
+npx skills add oyusypenko/creo
+```
+
+or add this repository as a Codex plugin marketplace (Codex reads `.claude-plugin/marketplace.json`):
+
+```bash
+codex plugin marketplace add oyusypenko/creo
+```
+
+Note: subagents (`agents/*.md`) are Claude Code-specific; Codex users get the skills only.
+
+### Install via script (Unix/macOS)
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/oyusypenko/creo/main/install.sh | bash
 ```
 
-### Install (Windows)
+### Install via script (Windows)
 
 ```powershell
 irm https://raw.githubusercontent.com/oyusypenko/creo/main/install.ps1 | iex
 ```
 
-### Install (Git Clone)
+### Install via script (Git Clone)
 
 ```bash
 git clone https://github.com/oyusypenko/creo.git
