@@ -1,0 +1,33 @@
+{
+  "name": "creo",
+  "owner": {
+    "name": "oyusypenko",
+    "url": "https://github.com/oyusypenko"
+  },
+  "description": "Creo -- AI-powered design, UX, content, SEO, DevOps, and testing toolkit for Claude Code",
+  "plugins": [
+    {
+      "name": "creo",
+      "displayName": "Creo",
+      "source": "./",
+      "description": "12 sub-skills and 13 parallel subagents covering design review (WCAG, Nielsen's heuristics), UX analysis, marketing content (JTBD), SEO + GEO auditing, DevOps, CI/CD pipelines, test orchestration, and marketing site creation.",
+      "author": {
+        "name": "oyusypenko",
+        "url": "https://github.com/oyusypenko"
+      },
+      "homepage": "https://github.com/oyusypenko/creo",
+      "license": "MIT",
+      "keywords": [
+        "design-review",
+        "ux",
+        "seo",
+        "marketing",
+        "content",
+        "devops",
+        "ci-cd",
+        "testing",
+        "accessibility"
+      ]
+    }
+  ]
+}

@@ -5,9 +5,55 @@
 - [Claude Code](https://claude.com/claude-code) CLI installed
 - Git
 
-## Core Installation
+## Plugin Installation (recommended)
 
-The core install is zero-dependency (pure markdown skills and agents).
+Creo is distributed as a Claude Code plugin through its own marketplace
+(`.claude-plugin/marketplace.json` in this repository).
+
+Inside Claude Code:
+
+```
+/plugin marketplace add oyusypenko/creo
+/plugin install creo@creo
+```
+
+Or from the terminal:
+
+```bash
+claude plugin marketplace add oyusypenko/creo
+claude plugin install creo@creo
+```
+
+This installs the orchestrator, all sub-skills, and all subagents in one step.
+Update later with `/plugin marketplace update creo`. Uninstall with
+`claude plugin uninstall creo`.
+
+Do not combine the plugin install with the script install below -- pick one,
+otherwise skills appear twice.
+
+## Codex Installation
+
+Codex (OpenAI) supports the same [Agent Skills](https://agentskills.io) format.
+Either install the skills directly:
+
+```bash
+npx skills add oyusypenko/creo
+```
+
+or add this repository as a Codex plugin marketplace (Codex reads
+`.claude-plugin/marketplace.json`):
+
+```bash
+codex plugin marketplace add oyusypenko/creo
+```
+
+Subagents (`agents/*.md`) are Claude Code-specific and are not installed in
+Codex; the skills cover the same workflows.
+
+## Script Installation (alternative)
+
+The script install copies skills and agents into `~/.claude/` directly. It is
+zero-dependency (pure markdown skills and agents).
 
 ### Unix/macOS (one-liner)
 
