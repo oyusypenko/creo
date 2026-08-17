@@ -32,10 +32,26 @@
 
 | Command | Description |
 |---------|-------------|
-| `/creo seo audit <url>` | Full SEO audit |
+| `/creo seo onboard <url>` | Full lifecycle: audit, plan, guided GSC setup, monitoring, cadence |
+| `/creo seo plan <url>` | Audit + prioritized implementation plan (DEV/YOU tagged) |
+| `/creo seo init` | Scan codebase, cache project profile |
+| `/creo seo audit <url>` | Full 7-phase SEO + GEO audit |
+| `/creo seo audit --brief <url>` | Fast audit (technical + build + live + scoring) |
 | `/creo seo technical <url>` | Technical SEO checks |
 | `/creo seo content <url>` | Content quality analysis |
 | `/creo seo schema <url>` | Structured data validation |
+| `/creo seo sitemap` | Sitemap audit + generation recommendations |
+| `/creo seo citability <url>` | Passage-level AI citability score |
+| `/creo seo llms-txt [--generate]` | Validate or generate /llms.txt |
+| `/creo seo crawlers [--fix]` | AI crawler robots.txt audit |
+| `/creo seo compare <old> <new>` | Delta between two prior audits |
+| `/creo seo autofix [--dry-run]` | Closed-loop GSC remediation (allowlist + ledger + verify) |
+| `/creo seo triage <bucket>` | Triage a GSC coverage bucket (expected vs concern) |
+| `/creo seo semantic-core` | Focused query core with noise filter and P0-P3 priorities |
+| `/creo seo freshness` | Freshness-signal divergence + year-staleness audit |
+| `/creo seo offpage` | Off-page authority plan + trust-killer sweep |
+| `/creo seo weekly [--setup]` | Weekly rank/LLM-citability snapshot (read or scaffold) |
+| `/creo seo page-rules` | Generate project-scoped page-creation SEO rules |
 
 ### DevOps
 
@@ -108,3 +124,6 @@ Available after installing the corresponding extension.
 | `/creo gsc security <url>` | Security headers check |
 | `/creo gsc schema <url>` | Schema markup validation |
 | `/creo gsc hreflang <url>` | Hreflang tag validation |
+| `/creo gsc ui-export` | Export GSC Page-Indexing drilldown CSVs (UI-only data) |
+| `/creo gsc validate-fix` | Trigger GSC "Validate Fix" for issue classes (UI-only action) |
+| `/creo gsc open [<surface>]` | Open a GSC report in the user's browser and operate it (browser-first) |

@@ -40,6 +40,9 @@ Self-contained packages that add tool-backed capabilities. Each extension provid
 - Its own agent (`.md`)
 - Install/uninstall scripts
 - Tool code (Python or Node.js)
+- Optionally: automation scripts (`scripts/`), copy-into-project templates (`templates/`), reference docs (`references/`, `docs/`)
+
+The gsc-analyzer extension additionally powers the creo-seo skill's operations mode (`/creo seo onboard`, `autofix`, `weekly`, `semantic-core`): the skill holds the generic playbooks (`skills/creo-seo/references/`), the extension holds the executable scripts. Skills degrade gracefully when the extension is absent.
 
 Extensions install to `~/.claude/skills/creo-{extension}/` and `~/.claude/agents/creo-{extension}.md`.
 

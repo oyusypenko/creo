@@ -1,0 +1,52 @@
+{
+  "_comment": "Per-project SEO site config consumed by seo_site_config.py. Copy to your project root as seo-site-config.json (or point SEO_SITE_CONFIG / --site-config at it). Keys starting with '_' are ignored, so these inline notes are safe to keep or delete. The example below models a generic SaaS site; replace every value with your own taxonomy.",
+
+  "_comment_target_domain": "Bare domain used for citation matching (subdomains match too).",
+  "target_domain": "example.com",
+
+  "_comment_known_locales": "Locale path prefixes stripped before cluster matching, so /de/pricing clusters like /pricing.",
+  "known_locales": ["en", "de", "es", "fr", "it", "pt", "nl", "pl", "ja"],
+
+  "_comment_clusters": "Ordered URL-path rules, first match wins; anything unmatched falls back to 'other'. Put more specific prefixes before general ones (e.g. /blog/category/ before /blog/). Trailing slashes are irrelevant: '/blog/' matches /blog, /blog/ and /blog/x.",
+  "clusters": [
+    { "prefix": "/blog/category/", "name": "blog-category" },
+    { "prefix": "/blog/", "name": "blog-post" },
+    { "prefix": "/docs/api/", "name": "docs-api" },
+    { "prefix": "/docs/", "name": "docs" },
+    { "prefix": "/integrations/", "name": "integration" },
+    { "prefix": "/templates/", "name": "template" },
+    { "prefix": "/compare/", "name": "comparison" },
+    { "prefix": "/customers/", "name": "case-study" },
+    { "prefix": "/glossary/", "name": "glossary" },
+    { "prefix": "/tools/", "name": "free-tool" }
+  ],
+
+  "_comment_commercial_paths": "Path prefixes considered transactional; they cluster as 'commercial' when no cluster rule matched first. '/' matches the homepage only.",
+  "commercial_paths": ["/", "/pricing", "/features", "/how-it-works", "/signup", "/demo"],
+
+  "_comment_commercial_signals": "Lowercase substrings that mark real user intent. Any query containing one of these is NEVER classified as noise, even if a noise pattern matches. Trailing/leading spaces are significant ('best ' avoids matching 'bestseller').",
+  "commercial_signals": [
+    "best ", "top ", "how to", "how do", "why ", " vs ", "alternative",
+    " app", " tool", " software", "pricing", "review", "template",
+    "integration", "tutorial", "example"
+  ],
+
+  "_comment_noise_patterns": "Regexes applied to the lowercased query; a match classifies the query as noise (dropped from the focused core, kept in the .raw.csv). Typical noise: raw ID lookups, support/error queries, brand-navigation for other products, scrapy database-style lookups.",
+  "noise_patterns": [
+    "^[\"']?\\d{5,8}[\"']?$",
+    "\\berror\\s+(code\\s+)?\\d+",
+    "\\b(login|log\\s*in|sign\\s*in)\\b.*\\b(page|portal|account)\\b",
+    "\\b(crack|cracked|torrent|keygen|serial\\s+key)\\b",
+    "\"[^\"]*,[^\"]*,[^\"]*\"",
+    "\\bstatus\\s+page\\b"
+  ],
+
+  "_comment_purpose_patterns": "Regexes that cancel a noise classification (strongest override, checked before commercial_signals). Use for audience/purpose qualifiers that prove real intent.",
+  "purpose_patterns": [
+    "\\bfor\\s+(teams|startups|enterprise|agencies|freelancers|developers|students|nonprofits|small\\s+business)\\b"
+  ],
+
+  "_comment_priority_bands": "Cluster names feeding the P0-P3 rubric. P0 = commercial heart of the business (needs impressions >= 50 OR position <= 20). P2 = informational authority (needs impressions >= 30). P1 is cluster-independent: impressions >= 100 and position 4-30. Everything else is P3.",
+  "p0_clusters": ["commercial", "comparison", "integration"],
+  "p2_clusters": ["docs", "glossary", "blog-post"]
+}

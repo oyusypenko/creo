@@ -1,0 +1,27 @@
+{
+  "_comment": "Anti-thrash ledger for the GSC auto-fix loop. Dedup key is (url, issueType). Entries stay forever as history. status: fixed_pending_recrawl (fix deployed, waiting 2-6 weeks for Google recrawl - do NOT re-fix while the live check passes), escalated (fix live > 30 days but GSC still reports it - a GitHub issue was opened, no more code edits), failed (fix attempt reverted after validation or verify failure). Copy to ./seo-autofix-ledger.json and pass via --ledger.",
+  "entries": [
+    {
+      "url": "https://example.com/old-pricing",
+      "issueType": "fetch:NOT_FOUND",
+      "status": "fixed_pending_recrawl",
+      "firstSeen": "2026-07-01",
+      "gscLastSeen": "2026-08-11",
+      "fixCommitSha": "abc1234def5678",
+      "deployedAt": "2026-07-08T09:42:00Z",
+      "verifiedAt": "2026-07-08T10:05:00Z",
+      "notes": "added redirect /old-pricing -> /pricing/; live-verified 200 in 1 hop"
+    },
+    {
+      "url": "https://example.com/blog/some-post/",
+      "issueType": "canonical-mismatch",
+      "status": "escalated",
+      "firstSeen": "2026-05-12",
+      "gscLastSeen": "2026-08-11",
+      "fixCommitSha": "9876fed543210a",
+      "deployedAt": "2026-05-20T14:10:00Z",
+      "verifiedAt": "2026-05-20T14:30:00Z",
+      "notes": "fix live > 30 days but GSC still reports it; opened issue #42 - suspect stale internal links still pointing at the non-canonical variant"
+    }
+  ]
+}
