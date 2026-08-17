@@ -1,0 +1,32 @@
+# Canary expectations for gsc_autofix_verify.sh --canaries <this file>
+#
+# Format: one check per line
+#   <url> <expected_final_url>
+#
+# Each URL is fetched following redirects (max 3). The check passes only when
+# ALL three hold:
+#   1. the final HTTP status is 200
+#   2. the final URL matches <expected_final_url> exactly (trailing slash
+#      included - copy it from a live "curl -sIL" run, not from memory)
+#   3. the redirect chain used at most 2 hops (Google penalizes longer chains)
+#
+# Blank lines and lines starting with # are skipped. A line with a URL but no
+# expected final URL is counted as a failure (malformed), so every entry stays
+# honest.
+#
+# Recommended canary set:
+#   - the root URL (usually redirects to the default locale or canonical home)
+#   - each locale home page (if the site is localized)
+#   - ONE representative URL per redirect family in your config (e.g. one
+#     legacy path, one alias rule, one trailing-slash rule) - if one member of
+#     a family breaks, the whole family broke
+#
+# Replace the examples below with URLs verified against YOUR production site.
+
+https://example.com/ https://example.com/en/
+https://example.com/en/ https://example.com/en/
+https://example.com/fr/ https://example.com/fr/
+
+# one per redirect family
+https://example.com/pricing https://example.com/en/pricing/
+https://example.com/blog/old-slug https://example.com/en/blog/new-slug/

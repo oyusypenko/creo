@@ -1,0 +1,259 @@
+# =============================================================================
+# TEMPLATE: weekly SEO snapshot workflow.
+#
+# Copy this file into your repo as .github/workflows/seo-weekly.yml and edit
+# every line marked with "# ADJUST:".
+#
+# Weekly cron: pulls fresh GSC (and optional Bing) data for the previous ISO
+# week, snapshots LLM citability via DataForSEO, runs the year-staleness
+# check, and opens a PR with the new files under seo-reports/.
+#
+# Required repository secrets:
+#   GSC_SERVICE_ACCOUNT_JSON   full JSON of a GSC service-account key with
+#                              read access to your Search Console property
+#
+# Optional repository secrets:
+#   BING_WEBMASTER_API_KEY     enables the Bing Webmaster Tools merge
+#   DATAFORSEO_LOGIN           DataForSEO API login
+#   DATAFORSEO_PASSWORD        DataForSEO API password
+#
+# The DataForSEO step is wrapped with continue-on-error: true so a SERP API
+# outage does not block the weekly GSC commit.
+# =============================================================================
+
+name: SEO Weekly Snapshot
+
+on:
+  schedule:
+    # Every Monday at 08:00 UTC. GSC has a ~2-day reporting lag — pulling on
+    # Monday gives a complete Mon-Sun ISO week ending the previous Sunday.
+    - cron: '0 8 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: seo-weekly
+  cancel-in-progress: true
+
+env:
+  GSC_SITE_URL: 'sc-domain:example.com'          # ADJUST: your GSC property
+  BING_SITE_URL: 'https://example.com'           # ADJUST: only needed with BING_WEBMASTER_API_KEY
+  SEO_SITE_CONFIG: './seo-site-config.json'      # ADJUST: path to your site config
+  SEO_SCRIPTS: 'extensions/gsc-analyzer/scripts' # ADJUST: where the analytics scripts live in your repo
+
+jobs:
+  weekly-snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          # Generic advice: use fetch-depth: 0 if any of your build tooling
+          # derives content freshness from git commit times — a shallow clone
+          # makes every file look modified "now" and silently breaks that
+          # signal. Drop it for a faster checkout if nothing needs history.
+          fetch-depth: 0
+
+      - name: Set up Node (year-staleness check)
+        uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+
+      - name: Year-rollover staleness check
+        id: staleness
+        # Flags content JSON where the date field is > 90 days old AND a
+        # string contains the current/previous year. Inform-only here: the
+        # cron's primary job is the GSC pull, so we don't block it on
+        # editorial freshness debt. The result is surfaced in the PR body.
+        continue-on-error: true
+        run: |
+          mkdir -p seo-reports
+          node "$SEO_SCRIPTS/check_year_staleness.mjs" \
+            --root=content/en/pages \
+            --out=seo-reports/year-staleness-report.csv
+          # ADJUST: --root above must point at your JSON content directory;
+          # add --date-field=... if your date field is not "dateModified".
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Python deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install \
+            "google-api-python-client>=2.140" \
+            "google-auth>=2.30" \
+            "requests>=2.32"
+
+      - name: Write GSC service-account key
+        env:
+          GSC_SERVICE_ACCOUNT_JSON: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON }}
+        run: |
+          if [ -z "${GSC_SERVICE_ACCOUNT_JSON}" ]; then
+            echo "ERROR: GSC_SERVICE_ACCOUNT_JSON secret is empty." >&2
+            exit 1
+          fi
+          mkdir -p .secrets
+          printf '%s' "${GSC_SERVICE_ACCOUNT_JSON}" > .secrets/gsc.json
+          # Sanity-check the JSON parses.
+          python -c "import json; json.load(open('.secrets/gsc.json'))"
+          echo "GSC_KEY_FILE=$PWD/.secrets/gsc.json" >> "$GITHUB_ENV"
+
+      - name: Pull weekly GSC + (optional) Bing snapshot
+        env:
+          BING_WEBMASTER_API_KEY: ${{ secrets.BING_WEBMASTER_API_KEY }}
+        run: |
+          python "$SEO_SCRIPTS/pull_weekly_snapshot.py" \
+            --out-dir seo-reports/rank-history \
+            --core-csv seo-reports/semantic-core.csv \
+            | tee weekly-snapshot.json
+          # ADJUST: drop --core-csv (or change the path) if you don't keep a
+          # committed focused-core CSV.
+
+      - name: Track LLM citability (DataForSEO)
+        id: llm
+        continue-on-error: true
+        env:
+          DATAFORSEO_LOGIN: ${{ secrets.DATAFORSEO_LOGIN }}
+          DATAFORSEO_PASSWORD: ${{ secrets.DATAFORSEO_PASSWORD }}
+        run: |
+          if [ -z "${DATAFORSEO_LOGIN}" ] || [ -z "${DATAFORSEO_PASSWORD}" ]; then
+            echo "Skipping LLM tracking — DataForSEO credentials not set." >&2
+            exit 0
+          fi
+          python "$SEO_SCRIPTS/track_llm_visibility.py" \
+            --core-csv seo-reports/semantic-core.csv \
+            --out-dir seo-reports/llm-visibility \
+            | tee llm-visibility.json
+
+      - name: Compute PR body (top movers vs prior week)
+        id: prbody
+        run: |
+          python - <<'PY' > pr-body.md
+          import csv
+          from pathlib import Path
+
+          rh = Path("seo-reports/rank-history")
+          files = sorted(p for p in rh.glob("*.csv") if p.stem.count("-") == 2)
+
+          def load(path):
+              rows = {}
+              if not path or not path.exists():
+                  return rows
+              with path.open(encoding="utf-8") as f:
+                  for row in csv.DictReader(f):
+                      key = (row["query"], row["target_url"])
+                      try:
+                          impr = int(row["impressions"])
+                          pos = float(row["current_position"])
+                      except Exception:
+                          continue
+                      rows[key] = {
+                          "impr": impr,
+                          "pos": pos,
+                          "core": row.get("is_in_focused_core") == "true",
+                      }
+              return rows
+
+          curr = load(files[-1]) if files else {}
+          prev = load(files[-2]) if len(files) >= 2 else {}
+
+          deltas = []
+          for k, v in curr.items():
+              if not v["core"]:
+                  continue
+              p = prev.get(k)
+              if not p:
+                  continue
+              d_pos = v["pos"] - p["pos"]
+              d_impr = v["impr"] - p["impr"]
+              deltas.append((k, d_pos, d_impr, v["pos"], v["impr"]))
+
+          # Risers = position improved (delta_pos negative).
+          risers = sorted(deltas, key=lambda r: r[1])[:5]
+          fallers = sorted(deltas, key=lambda r: r[1], reverse=True)[:5]
+
+          print("## Weekly SEO snapshot")
+          if files:
+              print(f"\nCurrent file: `{files[-1]}`")
+          if len(files) >= 2:
+              print(f"Compared to: `{files[-2]}`")
+          else:
+              print("\n_First snapshot — no prior week to compare._")
+
+          if risers:
+              print("\n### Top 5 risers (focused core, delta position negative = better)")
+              print("| query | target | d_pos | d_imp | pos | imp |")
+              print("| ----- | ------ | ----: | ----: | ---: | ---: |")
+              for (q, u), dp, di, pos, impr in risers:
+                  print(f"| {q} | {u} | {dp:+.2f} | {di:+d} | {pos:.2f} | {impr} |")
+
+          if fallers:
+              print("\n### Top 5 fallers (focused core)")
+              print("| query | target | d_pos | d_imp | pos | imp |")
+              print("| ----- | ------ | ----: | ----: | ---: | ---: |")
+              for (q, u), dp, di, pos, impr in fallers:
+                  print(f"| {q} | {u} | {dp:+.2f} | {di:+d} | {pos:.2f} | {impr} |")
+
+          llm_path = Path("seo-reports/llm-visibility")
+          if llm_path.exists():
+              llm_files = sorted(llm_path.glob("*.csv"))
+              if llm_files:
+                  print(f"\n### LLM citability\nLatest file: `{llm_files[-1]}`")
+
+          # Year-rollover staleness — append findings (or a clean marker) so
+          # the editorial team sees rotting year-stamped pages weekly.
+          stale_csv = Path("seo-reports/year-staleness-report.csv")
+          print("\n### Year-rollover staleness check")
+          if not stale_csv.exists():
+              print("_Staleness report missing — node script may have failed; check the workflow logs._")
+          else:
+              with stale_csv.open(encoding="utf-8") as f:
+                  rows = list(csv.DictReader(f))
+              if not rows:
+                  print("Clean — no pages have year-stamped strings with a stale date field.")
+              else:
+                  print(f"**{len(rows)} finding(s)** — pages with year-stamped strings AND a stale date field:\n")
+                  print("| file | year | path | date field | days stale |")
+                  print("| ---- | ---- | ---- | ---------- | ---------: |")
+                  # Cap to the first 25 so the PR body stays readable.
+                  for row in rows[:25]:
+                      print(
+                          f"| `{row['file_path']}` | {row['year_in_string']} "
+                          f"| `{row['year_string_path']}` | {row['date_field_value']} "
+                          f"| {row['days_since_modified']} |"
+                      )
+                  if len(rows) > 25:
+                      print(f"\n_(+{len(rows) - 25} more rows — see `seo-reports/year-staleness-report.csv`.)_")
+                  print("\nEither bump the date field (after a real content update) or drop the year from the copy (evergreen).")
+          PY
+          echo "body_path=pr-body.md" >> "$GITHUB_OUTPUT"
+
+      - name: Clean up secrets before commit
+        if: always()
+        run: rm -rf .secrets
+
+      - name: Open PR with weekly snapshot
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'seo: weekly snapshot ${{ github.run_id }}'
+          branch: seo/weekly-${{ github.run_id }}
+          base: main                               # ADJUST: your default branch
+          title: 'seo: weekly snapshot'
+          body-path: pr-body.md
+          add-paths: |                             # ADJUST: match your output dirs
+            seo-reports/rank-history/*.csv
+            seo-reports/llm-visibility/*.csv
+            seo-reports/year-staleness-report.csv
+          delete-branch: true
+          labels: |
+            seo
+            automated

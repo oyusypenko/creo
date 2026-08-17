@@ -17,6 +17,9 @@ A self-contained optional extension that adds Google Search Console analysis and
 - **Performance Analysis** - Render-blocking CSS/JS, image optimization, caching, compression
 - **URL & Links Analysis** - Anchor text quality, URL structure, pagination
 - **Site-wide Crawling & Audit** - Duplicate content, thin pages, orphan pages, broken links
+- **GSC UI Automation** - Page Indexing drilldown exports and "Validate Fix" (surfaces with no API)
+- **Closed-Loop Autofix** - Detect, allowlisted fix, live verification, reindex requests, anti-thrash ledger
+- **Monitoring** - Weekly rank history, semantic core with noise filtering, 12-week trends, LLM-citability tracking, year-staleness guard
 
 ## Prerequisites
 
@@ -122,6 +125,86 @@ PAGESPEED_API_KEY=your_api_key
 | URL Inspection | `inspect <url>` | Yes |
 | Indexing Requests | `index-request <url>` | Yes |
 | Full SEO Audit | `seo-audit` | Yes |
+
+## UI Automation Scripts
+
+Two surfaces of Search Console have no API at all: the Page Indexing
+drilldowns' example-URL lists, and the "Validate Fix" button. The `scripts/`
+directory ships two Playwright scripts that automate them through the real UI:
+
+- `scripts/gsc_ui_export.mjs` - exports each indexing issue's URL list
+  (Table.csv) into `./gsc-exports` (or `--out=<dir>` / `GSC_EXPORTS_DIR`).
+- `scripts/gsc_validate_fix.mjs` - clicks "Validate Fix" for the given issue
+  classes (`--issues="Not found (404),Server error (5xx)"` is the default).
+  Supports `--dry-run` and `--cdp` (attach to a running Chrome).
+
+Prerequisite: Playwright installed in the project you run them from:
+
+```bash
+npm i -D playwright && npx playwright install chromium
+```
+
+Setup flow (Google blocks scripted logins, so login is a one-time manual step):
+
+```bash
+export GSC_SITE_URL="sc-domain:example.com"
+
+# 1. One-time headed login; saves cookies to ~/.cache/gsc-ui-profile
+#    (override with GSC_UI_PROFILE_DIR). One setup serves both scripts.
+node scripts/gsc_ui_export.mjs --setup
+
+# 2. Recurring runs (headless-capable) reuse the saved session:
+node scripts/gsc_ui_export.mjs
+node scripts/gsc_validate_fix.mjs --dry-run
+```
+
+Exit codes: 0 = ran, 2 = Google session expired (re-run `--setup`), 1 = other
+failure. Treat non-zero as "skip this step and flag a human" - never fail a
+surrounding workflow on it.
+
+## Autofix Loop Scripts
+
+Closed-loop Search Console remediation (detect -> allowlisted fix -> verify ->
+notify -> validate -> ledger). See `docs/autofix.md` for the full pipeline and
+`skills/creo-seo/references/gsc-autofix-loop.md` (Creo core) for the fix
+policy:
+
+- `scripts/gsc_autofix_detect.py` - budgeted URL-inspection sweep with
+  multi-issue classification, sitemap health floor, and click-anomaly check.
+- `scripts/gsc_request_reindex.py` - sitemap resubmit + Indexing API
+  notifications (best-effort, never fails the run).
+- `scripts/gsc_autofix_verify.sh` - live verification: 3-part redirect
+  assertions, canary suite, robots/sitemap invariants; exit code = failures.
+
+Templates: `templates/seo-autofix-ledger.example.json`,
+`templates/seo-canaries.example.txt`.
+
+## Monitoring Scripts
+
+Weekly rank history, semantic core, trends, LLM citability, and freshness
+guards. See `docs/monitoring.md`:
+
+- `scripts/seo_site_config.py` - shared per-project taxonomy module
+  (template: `templates/seo-site-config.example.json`).
+- `scripts/pull_weekly_snapshot.py` - weekly GSC (+ optional Bing) rank
+  snapshot, idempotent per ISO week.
+- `scripts/pull_semantic_core.py` + `scripts/filter_semantic_core.py` -
+  focused query core with noise filtering and P0-P3 priorities.
+- `scripts/pull_trends_12w.py` - rolling 12-week half-over-half trend labels.
+- `scripts/track_llm_visibility.py` - AI answer-engine citation tracking
+  (DataForSEO) with pre-spend cost estimate.
+- `scripts/check_year_staleness.mjs` - year-staleness CI guard.
+
+Workflow template: `templates/seo-weekly.yml` (copy into
+`.github/workflows/`, adjust the `# ADJUST:` markers).
+
+## References
+
+- `references/gsc-api-reference.md` - complete Search Console API guide:
+  service-account setup, endpoint reference, Python examples, quotas,
+  rate limiting, and troubleshooting.
+- `docs/autofix.md` - closed-loop autofix pipeline and script usage.
+- `docs/monitoring.md` - monitoring scripts, weekly workflow, site config.
 
 ## Uninstall
 

@@ -48,10 +48,21 @@ function Main {
     # Copy gsc_toolkit package
     Copy-Item (Join-Path $ScriptDir "gsc_toolkit\*") (Join-Path $ExtDir "gsc_toolkit") -Recurse -Force
 
-    # Copy legacy script
-    $scriptsSource = Join-Path $ScriptDir "scripts\*.py"
-    if (Test-Path $scriptsSource) {
-        Copy-Item $scriptsSource (Join-Path $ExtDir "scripts") -Force
+    # Copy automation scripts (autofix loop, monitoring, UI automation)
+    foreach ($pattern in @("scripts\*.py", "scripts\*.mjs", "scripts\*.sh")) {
+        $scriptsSource = Join-Path $ScriptDir $pattern
+        if (Test-Path $scriptsSource) {
+            Copy-Item $scriptsSource (Join-Path $ExtDir "scripts") -Force
+        }
+    }
+
+    # Copy templates, references, and docs
+    foreach ($dir in @("templates", "references", "docs")) {
+        $srcDir = Join-Path $ScriptDir $dir
+        if (Test-Path $srcDir) {
+            New-Item -ItemType Directory -Force -Path (Join-Path $ExtDir $dir) | Out-Null
+            Copy-Item (Join-Path $srcDir "*") (Join-Path $ExtDir $dir) -Recurse -Force
+        }
     }
 
     # Copy requirements

@@ -4,14 +4,23 @@ description: >
   Google Search Console analysis and comprehensive SEO auditing.
   Site crawling, PageSpeed Insights, indexing API, on-page analysis,
   schema validation, hreflang, security headers, content quality, mobile SEO.
+  Uses the GSC API where it can and opens the Search Console web UI in the
+  user's browser where the API cannot (drilldowns, Validate Fix, settings).
   Requires gsc-analyzer extension.
-  Triggers on: /creo gsc, Google Search Console, GSC, site audit.
+  Triggers on: /creo gsc, Google Search Console, GSC, site audit, open GSC.
 allowed-tools:
   - Read
   - Grep
   - Glob
   - Bash
   - WebFetch
+  - mcp__claude-in-chrome__tabs_context_mcp
+  - mcp__claude-in-chrome__tabs_create_mcp
+  - mcp__claude-in-chrome__navigate
+  - mcp__claude-in-chrome__computer
+  - mcp__claude-in-chrome__read_page
+  - mcp__claude-in-chrome__find
+  - mcp__claude-in-chrome__get_page_text
 ---
 
 # Creo GSC - Google Search Console & SEO Analysis
@@ -29,6 +38,19 @@ allowed-tools:
 | `/creo gsc hreflang <url>` | Validate hreflang implementation |
 | `/creo gsc full-seo <url>` | Run all 9 page analyzers on a URL |
 | `/creo gsc site-audit <url>` | Crawl and audit entire website |
+| `/creo gsc ui-export` | Export Page Indexing drilldown CSVs via Playwright (UI-only data the API cannot enumerate) |
+| `/creo gsc validate-fix` | Click GSC's "Validate Fix" button via Playwright (no API exists for it) |
+| `/creo gsc open [<surface>]` | Open a Search Console report in the user's browser (overview, performance, indexing, sitemaps, settings, inspect <url>) and read/operate it together |
+
+## Browser-first operation
+
+The API is preferred for data it can serve, but this skill is NOT API-only.
+With browser tools available, open Search Console directly in the user's
+signed-in Chrome — navigate to the exact report via the deep-link map in the
+agent doc, read it, click drilldowns, export CSVs, and perform configuration
+(submit sitemaps, manage users) together with the user. The user must already
+be signed in; never attempt a scripted Google login; confirm before any
+destructive click. Use the UI as ground truth whenever API results look wrong.
 
 ## Running gsc_toolkit CLI Commands
 
@@ -128,3 +150,25 @@ GSC_OUTPUT_DIR=./output
 ```
 
 Page analysis commands (security, onpage, schema, hreflang, robots, content, mobile, performance, url-analysis, full-seo, site-audit) do not require any API credentials.
+
+## UI-only Surfaces (no API exists)
+
+The Search Console API cannot enumerate Page Indexing drilldown example URLs,
+and there is no API for the "Validate Fix" button. Two Playwright scripts in
+the extension's `scripts/` directory cover these:
+
+```bash
+# One-time headed login (shared persistent profile), then recurring exports:
+GSC_SITE_URL="sc-domain:example.com" node scripts/gsc_ui_export.mjs --setup
+GSC_SITE_URL="sc-domain:example.com" node scripts/gsc_ui_export.mjs --out=./gsc-exports
+
+# Click "Validate Fix" for issue classes whose fix is live:
+GSC_SITE_URL="sc-domain:example.com" node scripts/gsc_validate_fix.mjs --dry-run
+GSC_SITE_URL="sc-domain:example.com" node scripts/gsc_validate_fix.mjs --issues="Not found (404),Server error (5xx)"
+```
+
+Requires Playwright in the working project (`npm i -D playwright && npx
+playwright install chromium`). Exit code 2 means the saved Google session
+expired - re-run `--setup`. Full workflow details, the stable drilldown
+item_key table, and export-handling gotchas are in the agent doc
+(`agents/creo-gsc.md`, "GSC UI-only surfaces").

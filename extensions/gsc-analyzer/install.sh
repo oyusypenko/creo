@@ -31,8 +31,20 @@ main() {
     # Copy gsc_toolkit package
     cp -r "${SCRIPT_DIR}/gsc_toolkit/"* "${EXT_DIR}/gsc_toolkit/"
 
-    # Copy legacy script
+    # Copy automation scripts (autofix loop, monitoring, UI automation)
     cp "${SCRIPT_DIR}/scripts/"*.py "${EXT_DIR}/scripts/" 2>/dev/null || true
+    cp "${SCRIPT_DIR}/scripts/"*.mjs "${EXT_DIR}/scripts/" 2>/dev/null || true
+    cp "${SCRIPT_DIR}/scripts/"*.sh "${EXT_DIR}/scripts/" 2>/dev/null || true
+    chmod +x "${EXT_DIR}/scripts/"*.sh 2>/dev/null || true
+
+    # Copy templates (workflow, ledger, canaries, site config)
+    mkdir -p "${EXT_DIR}/templates"
+    cp "${SCRIPT_DIR}/templates/"* "${EXT_DIR}/templates/" 2>/dev/null || true
+
+    # Copy references and docs
+    mkdir -p "${EXT_DIR}/references" "${EXT_DIR}/docs"
+    cp "${SCRIPT_DIR}/references/"* "${EXT_DIR}/references/" 2>/dev/null || true
+    cp "${SCRIPT_DIR}/docs/"* "${EXT_DIR}/docs/" 2>/dev/null || true
 
     # Copy requirements
     cp "${SCRIPT_DIR}/requirements.txt" "${EXT_DIR}/"

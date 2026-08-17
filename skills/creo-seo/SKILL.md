@@ -5,9 +5,13 @@ description: >
   quality with AI-pattern detection, build validation, live Core Web Vitals, AI search
   readiness (citability, llms.txt, 14 AI crawlers), schema deprecation sweep, and
   composite scoring. Auto-builds per-project cached profile for faster repeat audits.
+  Also runs the ongoing SEO operation: closed-loop GSC autofix with allowlist and
+  ledger, coverage triage, semantic-core prioritization, weekly rank + LLM-citability
+  monitoring, freshness guards, and off-page authority planning.
   Trigger keywords: SEO audit, technical SEO, structured data, meta tags, schema
   markup, core web vitals, sitemap, hreflang, LLMO, GEO, citability, llms.txt,
-  AI crawlers.
+  AI crawlers, Search Console, GSC, indexation, coverage, semantic core, rank
+  tracking.
 allowed-tools:
   - Read
   - Grep
@@ -25,6 +29,8 @@ Elite SEO specialist for Next.js applications. Covers technical SEO auditing, AI
 
 | Command | What it does |
 |---------|-------------|
+| `/creo seo onboard <url>` | **Main lifecycle command** — audit, implementation plan, guided GSC/Bing configuration, monitoring + autofix scaffold, standing cadence. See `references/seo-onboarding.md`. |
+| `/creo seo plan <url>` | Analyze + produce a prioritized implementation plan (Problem/Fix/Verify, DEV/YOU tags, phased forecast) without the setup stages |
 | `/creo seo init` | Scan codebase and write cached project profile to `.claude/skills/creo-seo/creo-seo-{project_id}.md`. Run this first. |
 | `/creo seo audit <url>` | **Main full-site audit** — runs all 7 phases, produces markdown + JSON report |
 | `/creo seo audit --brief <url>` | Fast audit: Technical + Build + Live + Scoring only |
@@ -36,6 +42,13 @@ Elite SEO specialist for Next.js applications. Covers technical SEO auditing, AI
 | `/creo seo llms-txt [--generate]` | Validate existing `/llms.txt` or generate new one |
 | `/creo seo crawlers [--fix]` | Audit robots.txt for 14 AI crawlers; optionally rewrite |
 | `/creo seo compare <old.md> <new.md>` | Delta between two prior audits |
+| `/creo seo autofix [--dry-run]` | Closed-loop GSC remediation: detect, allowlisted fix, verify, notify, ledger (needs gsc-analyzer extension) |
+| `/creo seo triage <bucket>` | Triage a GSC coverage bucket: expected vs concern, direction over level |
+| `/creo seo semantic-core` | Build/refresh the focused query core with noise filtering and P0-P3 priorities |
+| `/creo seo freshness` | Audit freshness signals: lastmod/dateModified divergence, year-staleness |
+| `/creo seo offpage` | Off-page authority plan: directories, LLM citation slots, trust-killer sweep |
+| `/creo seo weekly [--setup]` | Read the latest weekly snapshot, or scaffold the weekly monitoring workflow |
+| `/creo seo page-rules` | Generate a project-scoped `.claude/rules/seo-page-rule.md` for page-creation-time enforcement |
 
 ## Core instructions
 
@@ -141,6 +154,16 @@ Loaded on demand based on command / phase:
 | `references/content-quality-rubric.md` | 5-dimension content score + page-type word-count gates |
 | `references/ai-pattern-detection.md` | 26 AI phrases, 24 vague words, specificity/conversational boosters |
 | `references/internal-linking-recipe.md` | Link-per-page gates, anchor strategy, cluster model, Next.js patterns |
+| `references/gsc-autofix-loop.md` | Closed-loop GSC remediation: fix allowlist, anti-thrash ledger, run sequence |
+| `references/coverage-triage.md` | Reading GSC indexing buckets: expected vs concern, direction over level |
+| `references/deploy-verification.md` | Edge-vs-origin checks, redirect assertions, canaries, validation windows |
+| `references/semantic-core.md` | Focused query core: noise filtering, P0-P3, opportunity buckets, trend labels |
+| `references/freshness-signals.md` | git-mtime as single source of truth, year policy, staleness CI guard |
+| `references/page-seo-rules.md` | Page-creation-time SEO rules (metadata vs JSON-LD, route enums, checklists) |
+| `references/seo-program-conventions.md` | DEV/YOU tags, Problem/Fix/Verify, changelogs, repeat-audit reports |
+| `references/indexation-runbook.md` | Hypothesis-branch template for missing/unindexed route families |
+| `references/offpage-authority.md` | Directory playbook, LLM citation slots, trust-killer sweep, Bing coverage |
+| `references/seo-onboarding.md` | `/creo seo onboard` lifecycle: audit -> plan -> GSC setup -> monitoring cadence |
 
 ## Quality gates
 
@@ -152,6 +175,33 @@ Loaded on demand based on command / phase:
 - Every indexable page must have unique title + meta description
 - JSON-LD must validate against `schema-validation-checklist.md`
 - Sitemap must include every indexable page from inventory
+
+## Operations mode (Search Console lifecycle)
+
+Beyond point-in-time audits, this skill runs an ongoing SEO operation when the
+`gsc-analyzer` extension is installed (`extensions/gsc-analyzer/` — scripts,
+templates, GSC API reference, UI automation):
+
+- **Autofix** (`/creo seo autofix`) — the weekly closed loop per
+  `references/gsc-autofix-loop.md`: detect via budgeted URL inspection, fix
+  only allowlisted issue classes, verify live at origin AND edge
+  (`references/deploy-verification.md`), notify Google, track everything in
+  an anti-thrash ledger. Judgment-shaped issues become GitHub issues, never
+  edits.
+- **Triage** (`/creo seo triage`) — before fixing anything from a coverage
+  report, apply `references/coverage-triage.md`: many buckets are expected
+  canonicalization behavior, most 404/redirect rows self-heal, direction
+  matters more than level.
+- **Monitoring** (`/creo seo weekly`) — weekly rank-history snapshot on the
+  focused core, optional Bing merge and LLM-citability tracking, year-
+  staleness check, delivered as a PR (extension `templates/seo-weekly.yml`).
+- **Semantic core** (`/creo seo semantic-core`) — per
+  `references/semantic-core.md`, with the per-project taxonomy in
+  `seo-site-config.json` (extension template).
+
+Without the extension, the operational commands still work in degraded mode:
+the skill reads exported CSVs, runs curl-based verification, and produces the
+same reports manually.
 
 ## Companion skill
 

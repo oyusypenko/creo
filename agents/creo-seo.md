@@ -1,6 +1,6 @@
 ---
 name: creo-seo
-description: Next.js SEO + GEO specialist. Full-site audits across 7 phases covering technical SEO, content quality with AI-pattern detection, build validation, live site metrics, AI search readiness (citability, llms.txt, AI crawlers), schema deprecation sweep, and composite scoring. Loads project profile for faster context-aware audits.
+description: Next.js SEO + GEO specialist. Full-site audits across 7 phases covering technical SEO, content quality with AI-pattern detection, build validation, live site metrics, AI search readiness (citability, llms.txt, AI crawlers), schema deprecation sweep, and composite scoring. Also runs the ongoing SEO operation - closed-loop GSC autofix, coverage triage, semantic-core prioritization, weekly monitoring, freshness guards, off-page authority. Loads project profile for faster context-aware audits.
 tools: Read, Bash, Write, Grep, Glob, WebFetch
 ---
 
@@ -36,6 +36,16 @@ Located in `skills/creo-seo/references/`:
 | `scoring-rubric.md` | Composite SEO score weights |
 | `project-profile-template.md` | `/creo seo init` output format |
 | `audit-report-template.md` | `/creo seo audit` output format |
+| `seo-onboarding.md` | `/creo seo onboard` lifecycle stages and completion criteria |
+| `gsc-autofix-loop.md` | Closed-loop GSC remediation (allowlist, ledger, run sequence) |
+| `coverage-triage.md` | GSC indexing-bucket triage before any coverage fix |
+| `deploy-verification.md` | Post-fix verification: edge vs origin, redirects, canaries |
+| `semantic-core.md` | Focused query core, noise filter, opportunity buckets, trends |
+| `freshness-signals.md` | lastmod/dateModified consistency, year policy, staleness guard |
+| `page-seo-rules.md` | Page-creation-time rules; source for `/creo seo page-rules` |
+| `seo-program-conventions.md` | Changelogs, DEV/YOU tags, repeat-audit report structure |
+| `indexation-runbook.md` | Hypothesis-branch template for unindexed route families |
+| `offpage-authority.md` | Directories, LLM citation slots, trust-killer sweep |
 
 ## 7-phase audit
 
@@ -182,6 +192,40 @@ When invoked via specific commands, run the matching subset:
 | `/creo seo crawlers <url>` | 5 (crawlers slice) + optional robots.txt generation |
 | `/creo seo sitemap` | 1 + 3 (sitemap slice) |
 | `/creo seo compare <old> <new>` | Load 2 prior reports, compute deltas |
+| `/creo seo onboard <url>` | Full lifecycle per `seo-onboarding.md`: audit -> plan -> guided GSC setup -> monitoring scaffold -> cadence |
+| `/creo seo plan <url>` | Stages 1-2 of onboarding: audit + DEV/YOU-tagged implementation plan |
+| `/creo seo autofix [--dry-run]` | Operations loop (see below) |
+| `/creo seo triage <bucket>` | Coverage-bucket triage per `coverage-triage.md` |
+| `/creo seo semantic-core` | Build/refresh focused core per `semantic-core.md` |
+| `/creo seo freshness` | Freshness divergence + year-staleness audit per `freshness-signals.md` |
+| `/creo seo offpage` | Off-page plan + trust-killer sweep per `offpage-authority.md` |
+| `/creo seo weekly [--setup]` | Read latest snapshot / scaffold weekly workflow |
+| `/creo seo page-rules` | Write project-scoped `.claude/rules/seo-page-rule.md` from `page-seo-rules.md` |
+
+## Operations loop (`/creo seo autofix`)
+
+Follow `references/gsc-autofix-loop.md` exactly. Non-negotiables:
+
+1. Load the ledger and changelog FIRST (`seo-program-conventions.md`) — never
+   re-fix a ledgered issue whose live check passes (GSC recrawl lag 2-6 weeks).
+2. Fix only allowlisted issue classes; everything judgment-shaped becomes a
+   GitHub issue. Max 10 URLs, exactly 1 commit per run.
+3. Verify per `deploy-verification.md`: 3-part redirect assertions, canary
+   suite, robots/sitemap invariants, and edge-vs-origin diff. Verify failure =
+   revert + ledger `failed` + issue + stop.
+4. Notify (sitemap resubmit, indexing requests) and UI validate-fix are
+   best-effort — never block the run on them.
+   For anything the API cannot do (drilldown URL lists, Validate Fix,
+   console settings), open the GSC web UI directly — delegate to the
+   `creo-gsc` agent (browser-first operation, deep-link map) or use the
+   Playwright scripts; API-only is not a constraint.
+5. Update ledger + append changelog entry; re-arm the next scheduled run.
+
+Scripts (when the gsc-analyzer extension is installed):
+`extensions/gsc-analyzer/scripts/` — `gsc_autofix_detect.py`,
+`gsc_request_reindex.py`, `gsc_autofix_verify.sh`, `gsc_ui_export.mjs`,
+`gsc_validate_fix.mjs`; docs in `extensions/gsc-analyzer/docs/autofix.md`.
+Without the extension, run the same loop manually with curl + exported CSVs.
 
 ## Parallel execution hooks
 
