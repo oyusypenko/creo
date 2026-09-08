@@ -2,9 +2,9 @@
 
 ## Project Overview
 
-Creo is a Claude Code skill providing 13 sub-skills, 13 parallel subagents, and 3 optional
+Creo is a Claude Code skill providing 14 sub-skills, 14 parallel subagents, and 4 optional
 extensions covering design review, UX analysis, marketing content, SEO, DevOps, CI/CD,
-testing, and marketing site orchestration.
+testing, performance optimization, and marketing site orchestration.
 
 ## Architecture
 
@@ -15,7 +15,7 @@ creo/
   creo/                                # Main orchestrator skill
     SKILL.md                           # Entry point, routing table, core rules
     references/                        # On-demand knowledge files (12 files)
-  skills/                              # 13 specialized sub-skills
+  skills/                              # 14 specialized sub-skills
     creo-design-review/SKILL.md        # UI/UX review (responsive, WCAG, heuristics)
     creo-design-implement/SKILL.md     # Execute design fixes from reports
     creo-ux-internal/SKILL.md          # Analyze own app UX flows
@@ -28,7 +28,8 @@ creo/
     creo-test/SKILL.md                 # Test orchestration (unit + E2E)
     creo-marketing-site/SKILL.md       # Marketing site creation (7-stage)
     creo-ai-generation/SKILL.md        # AI generation pipelines
-  agents/                              # 13 parallel subagents
+    creo-perf/SKILL.md                 # Performance optimization with measured proof
+  agents/                              # 14 parallel subagents
     creo-design-review.md
     creo-design-implement.md
     creo-ux-internal.md
@@ -41,10 +42,12 @@ creo/
     creo-cloudflare-cli.md
     creo-railway-cli.md
     creo-stripe-cli.md
+    creo-perf-audit.md
   extensions/                          # Optional extensions
     image-generation/                  # DALL-E 3 & ComfyUI (Node.js)
     i18n-translator/                   # Batch translation via LM Studio (Python)
     gsc-analyzer/                      # Google Search Console (Python)
+    perf-harness/                      # Deterministic benchmark harness (bash/python/node)
   docs/                                # Extended documentation
     ARCHITECTURE.md
     COMMANDS.md
@@ -67,6 +70,7 @@ creo/
 | `/creo test <command>` | Test orchestration |
 | `/creo marketing-site <command>` | Marketing site creation |
 | `/creo ai-generation <command>` | AI generation pipelines |
+| `/creo perf <command>` | Performance optimization (init, baseline, audit, optimize, report) |
 
 ## Development Rules
 

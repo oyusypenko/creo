@@ -12,7 +12,7 @@ The entry point for all `/creo` commands. Routes requests to the appropriate sub
 
 ### Layer 2: Sub-Skills (`skills/creo-*/SKILL.md`)
 
-12 specialized skills, each handling a specific domain. Contains detailed instructions, command routing, and references to on-demand knowledge files.
+14 specialized skills, each handling a specific domain. Contains detailed instructions, command routing, and references to on-demand knowledge files.
 
 | Domain | Skills |
 |--------|--------|
@@ -21,17 +21,19 @@ The entry point for all `/creo` commands. Routes requests to the appropriate sub
 | SEO | seo |
 | DevOps | devops, pipeline |
 | Testing | test |
+| Performance | perf |
 | Orchestration | marketing-site, ai-generation |
 
 ### Layer 3: Subagents (`agents/creo-*.md`)
 
-12 lightweight agents optimized for parallel execution. Spawned by orchestrator skills via Task tool with `context: fork`.
+14 lightweight agents optimized for parallel execution. Spawned by orchestrator skills via Task tool with `context: fork`.
 
 | Skill Spawns | Subagents |
 |-------------|-----------|
 | creo-devops | creo-github-cli, creo-cloudflare-cli, creo-railway-cli, creo-stripe-cli |
 | creo-test | creo-unit-test, creo-e2e-test |
 | creo-marketing-site | creo-design-review, creo-content, creo-seo, creo-ux-competitor |
+| creo-perf | creo-perf-audit (measure-only; the fix loop runs in the main context) |
 
 ## Extensions
 
@@ -43,6 +45,8 @@ Self-contained packages that add tool-backed capabilities. Each extension provid
 - Optionally: automation scripts (`scripts/`), copy-into-project templates (`templates/`), reference docs (`references/`, `docs/`)
 
 The gsc-analyzer extension additionally powers the creo-seo skill's operations mode (`/creo seo onboard`, `autofix`, `weekly`, `semantic-core`): the skill holds the generic playbooks (`skills/creo-seo/references/`), the extension holds the executable scripts. Skills degrade gracefully when the extension is absent.
+
+The perf-harness extension is the executable half of the creo-perf skill: the skill holds the protocol and playbooks (`skills/creo-perf/references/`), the extension holds the capture scripts and the templates that `/creo perf init` copies into a project's `.claude/skills/creo-perf/`. Without the extension the skill falls back to the manual measurement protocol.
 
 Extensions install to `~/.claude/skills/creo-{extension}/` and `~/.claude/agents/creo-{extension}.md`.
 
@@ -61,7 +65,8 @@ Extensions install to `~/.claude/skills/creo-{extension}/` and `~/.claude/agents
 │   ├── ...                      # (10 more sub-skills)
 │   ├── creo-image-generation/   # Extension (if installed)
 │   ├── creo-i18n/               # Extension (if installed)
-│   └── creo-gsc/                # Extension (if installed)
+│   ├── creo-gsc/                # Extension (if installed)
+│   └── creo-perf-harness/       # Extension (if installed)
 └── agents/
     ├── creo-design-review.md    # Subagent
     ├── creo-design-implement.md
@@ -99,6 +104,7 @@ Per-skill extension files let you teach any Creo skill about your project's doma
 | creo-test | `.claude/skills/creo-test/creo-test-{project_id}.md` |
 | creo-marketing-site | `.claude/skills/creo-marketing-site/creo-marketing-site-{project_id}.md` |
 | creo-ai-generation | `.claude/skills/creo-ai-generation/creo-ai-generation-{project_id}.md` |
+| creo-perf | `.claude/skills/creo-perf/creo-perf-{project_id}.md` (+ `perf.config.sh`, `scenarios/`, `sql-src/`, `fe-interactions.json`, `dashboard.json`, `results/` — scaffolded by `/creo perf init`) |
 | creo-unit-test | `.claude/skills/creo-unit-test/creo-unit-test-{project_id}.md` |
 | creo-e2e-test | `.claude/skills/creo-e2e-test/creo-e2e-test-{project_id}.md` |
 | creo-github-cli | `.claude/skills/creo-github-cli/creo-github-cli-{project_id}.md` |

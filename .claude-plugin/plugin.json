@@ -3,7 +3,7 @@
   "name": "creo",
   "displayName": "Creo",
   "version": "1.1.0",
-  "description": "AI-powered design, UX, content, DevOps, and testing toolkit for Claude Code. Design reviews (WCAG, Nielsen's heuristics), UX flow analysis, marketing content generation (JTBD), full-lifecycle SEO (7-phase audits, GEO/LLM visibility, closed-loop Search Console autofix, rank monitoring), CI/CD pipelines, test orchestration, and marketing site creation.",
+  "description": "AI-powered design, UX, content, DevOps, testing, and performance toolkit for Claude Code. Design reviews (WCAG, Nielsen's heuristics), UX flow analysis, marketing content generation (JTBD), full-lifecycle SEO (7-phase audits, GEO/LLM visibility, closed-loop Search Console autofix, rank monitoring), CI/CD pipelines, test orchestration, full-stack performance optimization with measured before/after proof, and marketing site creation.",
   "author": {
     "name": "oyusypenko",
     "url": "https://github.com/oyusypenko"
@@ -22,6 +22,8 @@
     "devops",
     "ci-cd",
     "testing",
+    "performance",
+    "benchmark",
     "accessibility"
   ],
   "skills": [

@@ -1,0 +1,6 @@
+# column-usage.tsv — optional: which scenarios / queries touch each column.
+# Rendered in the schema audit's "used by:" cell so an index decision can be
+# read against the read path it serves. Format: <table>.<column><TAB><usage>
+items.id	pkey JOIN in the paginated data CTE (S1)
+items.created_at	default sort ORDER BY created_at DESC NULLS LAST (S1, every page)
+items.doc	S1 full-doc payload; S2 ILIKE search over doc::text

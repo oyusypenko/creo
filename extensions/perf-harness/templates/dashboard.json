@@ -1,0 +1,13 @@
+{
+  "_comment": "creo-perf dashboard tuning for __PROJECT_ID__. order: scenario ids in render order (unknown ids appended alphabetically). titles/endpoints: per scenario. hidden_rows / no_delta: regexes on the metric key (defaults already hide correctness refs, variants, hypothetical verdicts, and skip deltas on index rows).",
+  "order": ["fe", "platform", "schema", "s1"],
+  "titles": {
+    "s1": "S1 — main list page (page 1, default sort, no filters)"
+  },
+  "endpoints": {
+    "s1": "`GET /items` -> `list_items()` — `backend/app/route/items.py:NN`"
+  },
+  "hidden_rows": [],
+  "no_delta": [],
+  "baseline_labels": ["before", "baseline"]
+}

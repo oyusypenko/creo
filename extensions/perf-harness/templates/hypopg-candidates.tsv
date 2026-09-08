@@ -1,0 +1,7 @@
+# hypopg-candidates.tsv — optional: index ideas tested WITHOUT creating them
+# (needs hypopg: observability-setup.sh --with-hypopg). The schema audit runs
+# plain EXPLAIN of the named runner section with the hypothetical index in
+# place and reports USED / NOT used. Once the real index exists the verdict is
+# redundant by definition — remove the line then.
+# Format: <name><TAB><CREATE INDEX statement><TAB><runner><TAB><section label>
+items btree (created_at DESC NULLS LAST)	CREATE INDEX ON items (created_at DESC NULLS LAST)	s1_default	data_p100

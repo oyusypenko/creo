@@ -3,9 +3,9 @@
 </p>
 
 <p align="center">
-  AI-powered design, UX, content, DevOps, and testing toolkit for <a href="https://claude.com/claude-code">Claude Code</a>.
+  AI-powered design, UX, content, DevOps, testing, and performance toolkit for <a href="https://claude.com/claude-code">Claude Code</a>.
   <br />
-  13 specialized skills, 13 parallel subagents, and 3 optional extensions.
+  14 specialized skills, 14 parallel subagents, and 4 optional extensions.
 </p>
 
 <p align="center">
@@ -24,7 +24,7 @@
 **With Creo:** One toolkit handles all of it. Run `/creo design-review` and get a full responsive + WCAG + heuristic audit. Run `/creo seo` for a complete SEO analysis. Run `/creo marketing-site full` to orchestrate an entire marketing site build with content, SEO, design review, localization, and QA -- all in parallel.
 
 - Zero dependencies -- pure markdown, one-liner install
-- 13 skills run as parallel subagents for speed
+- 14 skills run as parallel subagents for speed
 - Works with Claude Code, compatible with Codex, Cursor, and Gemini CLI
 
 ## Features
@@ -40,6 +40,7 @@
 - **Testing** -- Unit (Vitest/Jest) and E2E (Playwright) test orchestration
 - **Marketing Site** -- 7-stage orchestrated site creation (content, SEO, design, localization, QA)
 - **AI Generation** -- LLM pipeline expertise (prompt engineering, validation, queues, SSE)
+- **Performance** -- Six-layer audit (DB, API, edge, data layer, rendering, bundle), immutable baselines, deterministic before/after captures, one-concern-per-commit fix loop
 
 ## Quick Start
 
@@ -208,6 +209,10 @@ Teach any Creo skill about your project's domain, conventions, and file paths wi
     │   └── creo-seo-my-project.md                        # Keyword strategy, sitemap paths
     ├── creo-ai-generation/
     │   └── creo-ai-generation-my-project.md              # Zod schemas, prompts, queue names
+    ├── creo-perf/                                        # scaffolded by /creo perf init
+    │   ├── creo-perf-my-project.md                       # Stack, targets, scenarios, hot path, hazards, ledger
+    │   ├── perf.config.sh, scenarios/, sql-src/ ...      # Machine config the harness reads
+    │   └── results/dashboard.md                          # Before/after dashboard (committed)
     └── creo-unit-test/
         └── creo-unit-test-my-project.md                  # Test utilities, factories, mocks
 ```
@@ -225,7 +230,7 @@ Teach any Creo skill about your project's domain, conventions, and file paths wi
 
 **Why it matters:**
 
-Upstream Creo skills stay generic and reusable across any codebase. Your project-specific knowledge lives in your repo, survives Creo updates, and stays version-controlled alongside the code it describes. The same pattern works for all 13 skills plus DevOps subagents (GitHub/Cloudflare/Railway/Stripe CLI).
+Upstream Creo skills stay generic and reusable across any codebase. Your project-specific knowledge lives in your repo, survives Creo updates, and stays version-controlled alongside the code it describes. The same pattern works for all 14 skills plus DevOps subagents (GitHub/Cloudflare/Railway/Stripe CLI).
 
 ## Compatibility
 
@@ -271,7 +276,7 @@ Need just one skill? Each is available as a standalone install under [creo-kit](
 | **Marketing Site** | [claude-marketing-site](https://github.com/creo-kit/claude-marketing-site) | `curl -fsSL https://raw.githubusercontent.com/creo-kit/claude-marketing-site/main/install.sh \| bash` |
 | **AI Generation** | [claude-ai-generation](https://github.com/creo-kit/claude-ai-generation) | `curl -fsSL https://raw.githubusercontent.com/creo-kit/claude-ai-generation/main/install.sh \| bash` |
 
-> Install the full Creo toolkit to get all 13 skills at once, or pick individual ones above.
+> Install the full Creo toolkit to get all 14 skills at once, or pick individual ones above.
 
 ## Optional Extensions
 
@@ -282,6 +287,7 @@ Extensions add tool-backed capabilities. Each is self-contained with its own ins
 | **image-generation** | DALL-E 3 & ComfyUI image generation | Node.js 18+, OPENAI_API_KEY |
 | **i18n-translator** | Batch JSON translation (39+ languages) | Python 3, LM Studio |
 | **gsc-analyzer** | Google Search Console analysis (15+ analyzers) | Python 3, Google service account |
+| **perf-harness** | Deterministic performance benchmark harness for `/creo perf` (scenario captures, Lighthouse, schema/platform audits, workload discovery, dashboard) | bash, curl, python3, node; Chrome for Lighthouse; Docker for containerised DBs; Playwright optional |
 
 ### Install an extension
 
@@ -290,12 +296,14 @@ Extensions add tool-backed capabilities. Each is self-contained with its own ins
 ./extensions/image-generation/install.sh
 ./extensions/i18n-translator/install.sh
 ./extensions/gsc-analyzer/install.sh
+./extensions/perf-harness/install.sh
 ```
 
 Extension commands become available after install:
 - `/creo image-generation generate` -- Generate marketing images
 - `/creo i18n translate en uk,pl,de` -- Batch translate locales
 - `/creo gsc full-seo https://example.com` -- Full GSC analysis
+- `/creo perf init` then `/creo perf baseline` -- Scaffold the project harness and capture an immutable baseline
 
 ## Architecture
 
@@ -303,12 +311,13 @@ Extension commands become available after install:
 creo/
 ├── creo/SKILL.md                  # Main orchestrator (entry point)
 ├── creo/references/               # 12 on-demand knowledge files
-├── skills/                        # 13 sub-skills
-├── agents/                        # 13 parallel subagents
-├── extensions/                    # 3 optional extensions
+├── skills/                        # 14 sub-skills
+├── agents/                        # 14 parallel subagents
+├── extensions/                    # 4 optional extensions
 │   ├── image-generation/          # Node.js (DALL-E 3, ComfyUI)
 │   ├── i18n-translator/           # Python (LM Studio)
-│   └── gsc-analyzer/              # Python (Google Search Console)
+│   ├── gsc-analyzer/              # Python (Google Search Console)
+│   └── perf-harness/              # bash/python/node (benchmark harness)
 ├── install.sh / install.ps1       # One-liner installers
 └── uninstall.sh / uninstall.ps1   # Clean removal
 ```

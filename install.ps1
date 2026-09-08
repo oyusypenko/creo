@@ -98,3 +98,4 @@ Write-Host "Optional extensions:" -ForegroundColor Cyan
 Write-Host "  Image Generation:  .\extensions\image-generation\install.ps1"
 Write-Host "  i18n Translator:   .\extensions\i18n-translator\install.ps1"
 Write-Host "  GSC Analyzer:      .\extensions\gsc-analyzer\install.ps1"
+Write-Host "  Perf Harness:      .\extensions\perf-harness\install.ps1"

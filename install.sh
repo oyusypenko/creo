@@ -78,6 +78,7 @@ main() {
     echo "  Image Generation:  ./extensions/image-generation/install.sh"
     echo "  i18n Translator:   ./extensions/i18n-translator/install.sh"
     echo "  GSC Analyzer:      ./extensions/gsc-analyzer/install.sh"
+    echo "  Perf Harness:      ./extensions/perf-harness/install.sh"
     echo ""
     echo "To uninstall: curl -fsSL ${REPO_URL}/raw/main/uninstall.sh | bash"
 }

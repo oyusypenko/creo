@@ -4,13 +4,13 @@
     "name": "oyusypenko",
     "url": "https://github.com/oyusypenko"
   },
-  "description": "Creo -- AI-powered design, UX, content, SEO, DevOps, and testing toolkit for Claude Code",
+  "description": "Creo -- AI-powered design, UX, content, SEO, DevOps, testing, and performance toolkit for Claude Code",
   "plugins": [
     {
       "name": "creo",
       "displayName": "Creo",
       "source": "./",
-      "description": "13 sub-skills and 13 parallel subagents covering design review (WCAG, Nielsen's heuristics), UX analysis, marketing content (JTBD), SEO + GEO auditing, DevOps, CI/CD pipelines, test orchestration, and marketing site creation.",
+      "description": "14 sub-skills and 14 parallel subagents covering design review (WCAG, Nielsen's heuristics), UX analysis, marketing content (JTBD), SEO + GEO auditing, DevOps, CI/CD pipelines, test orchestration, full-stack performance optimization with measured proof, and marketing site creation.",
       "author": {
         "name": "oyusypenko",
         "url": "https://github.com/oyusypenko"
@@ -26,6 +26,7 @@
         "devops",
         "ci-cd",
         "testing",
+        "performance",
         "accessibility"
       ]
     }

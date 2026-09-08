@@ -122,6 +122,16 @@ cd creo
 ./extensions/gsc-analyzer/install.sh
 ```
 
+### Perf Harness
+
+Requires bash, curl, python3, node; Chrome for Lighthouse; Docker when the database is containerised. Playwright (in the frontend project) is optional for browser interaction probes.
+
+```bash
+./extensions/perf-harness/install.sh
+```
+
+Then, inside a project: `/creo perf init`.
+
 ## Uninstallation
 
 ### Core
@@ -137,6 +147,7 @@ cd creo
 ./extensions/image-generation/uninstall.sh
 ./extensions/i18n-translator/uninstall.sh
 ./extensions/gsc-analyzer/uninstall.sh
+./extensions/perf-harness/uninstall.sh
 ```
 
 ## Troubleshooting

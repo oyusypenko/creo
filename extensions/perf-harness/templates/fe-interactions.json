@@ -1,0 +1,28 @@
+{
+  "_comment": "Browser interaction probes for the creo-perf harness (fe-interactions.mjs). One entry per SCENARIO_FE key. Actions: click | type (+text, delay) | fill (+text) | press | hover | select (+value) | wait (ms) | waitFor (selector) | goto (path). `rows` = selector counted during the refetch (min rendered rows; 0 = the view blanks). `apiPattern` = regex of requests counted. Needs playwright resolvable from PERF_APP_DIR.",
+  "baseUrl": "http://localhost:80",
+  "cpuThrottle": 4,
+  "runs": 3,
+  "settle": 1500,
+  "apiPattern": "/api/items",
+  "scenarios": {
+    "next-page": {
+      "label": "next page",
+      "path": "/",
+      "ready": "table tbody tr",
+      "rows": "table tbody tr",
+      "actions": [
+        { "click": "button[aria-label='Go to next page']" }
+      ]
+    },
+    "typing": {
+      "label": "typing \"composite\" (9 keystrokes, 40 ms apart)",
+      "path": "/",
+      "ready": "table tbody tr",
+      "rows": "table tbody tr",
+      "actions": [
+        { "type": "input[placeholder*='Search']", "text": "composite", "delay": 40 }
+      ]
+    }
+  }
+}

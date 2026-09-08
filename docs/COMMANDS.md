@@ -80,6 +80,24 @@
 | `/creo test plan` | Create test plan |
 | `/creo test coverage` | Analyze test coverage |
 
+### Performance
+
+| Command | Description |
+|---------|-------------|
+| `/creo perf init` | Scaffold `.claude/skills/creo-perf/`, detect the stack, fill targets, propose scenarios, verify with preflight |
+| `/creo perf preflight` | Check tools, targets, DB access, scenarios, SQL mode |
+| `/creo perf baseline [label]` | Full immutable capture sweep (platform, schema, scenarios, fe, workload) |
+| `/creo perf audit [baseline\|after\|discover]` | Six-layer findings report via the `creo-perf-audit` subagent |
+| `/creo perf optimize [finding]` | Fix loop: one concern, re-measure, verify correctness, commit |
+| `/creo perf scenario <id> <label>` | Re-capture one scenario |
+| `/creo perf fe <label>` | Initial load / build / Lighthouse capture |
+| `/creo perf platform <label>` / `schema <label>` | Config-fact captures |
+| `/creo perf workload <label>` | pg_stat_statements discovery window |
+| `/creo perf after <label> [ids]` | Re-measure touched scenarios and show deltas |
+| `/creo perf dashboard` | Rebuild `results/dashboard.md` |
+| `/creo perf report` | SOLUTION-style per-finding write-up from the dashboard |
+| `/creo perf observability [--teardown]` | Enable or revert pg_stat_statements + auto_explain + hypopg |
+
 ### Orchestration
 
 | Command | Description |
@@ -127,3 +145,19 @@ Available after installing the corresponding extension.
 | `/creo gsc ui-export` | Export GSC Page-Indexing drilldown CSVs (UI-only data) |
 | `/creo gsc validate-fix` | Trigger GSC "Validate Fix" for issue classes (UI-only action) |
 | `/creo gsc open [<surface>]` | Open a GSC report in the user's browser and operate it (browser-first) |
+
+### Perf Harness (requires extension)
+
+Scripts behind `/creo perf`, callable directly through the project wrapper written by `/creo perf init`:
+
+| Command | Description |
+|---------|-------------|
+| `.claude/skills/creo-perf/perf preflight` | Tools, targets, scenarios |
+| `.claude/skills/creo-perf/perf audit-all <label>` | Every capture in configured order + workload window |
+| `.claude/skills/creo-perf/perf audit-scenario <id> <label> [--runs N] [--force]` | One scenario capture |
+| `.claude/skills/creo-perf/perf audit-fe <label> [--skip-build] [--skip-composition]` | Assets, build, composition, Lighthouse |
+| `.claude/skills/creo-perf/perf audit-platform <label>` | Backend + PostgreSQL config facts |
+| `.claude/skills/creo-perf/perf audit-schema <label>` | Tables, columns, indexes, hypopg verdicts |
+| `.claude/skills/creo-perf/perf observability-setup [--with-hypopg]` | Enable pg_stat_statements + auto_explain (restarts DB) |
+| `.claude/skills/creo-perf/perf workload-pre` / `workload-drive` / `workload-post <label> [--teardown]` | Discovery window lifecycle |
+| `.claude/skills/creo-perf/perf dashboard` | Rebuild `results/dashboard.md` |
